@@ -7,9 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "uFactory Robot Kolu Türkiye | Robotsepeti Yetkili Distribütör",
   description: "Türkiye'nin uFactory yetkili distribütörü Robotsepeti ile xArm, Lite6 ve Lite6 Pro robot kollarını inceleyin. Teknik destek ve hızlı teslimat.",
-  metadataBase: new URL("https://robotsepeti.com.tr"),
+  metadataBase: new URL("https://ufactory.robotsepeti.com"),
   alternates: {
-    canonical: "/ufactory-robot-kolu",
+    canonical: "/",
   },
   keywords: "uFactory robot kolu, uFactory Türkiye, uFactory distribütör, xArm 6 eksenli robot, cobot Türkiye, endüstriyel robot kolu, pick and place robotu",
   authors: [{ name: "Robotsepeti" }],
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "uFactory Robot Kolu | Robotsepeti",
     description: "Türkiye yetkili distribütörü Robotsepeti güvencesiyle xArm ve Lite6 endüstriyel robot kollarını keşfedin.",
-    url: "https://robotsepeti.com.tr/ufactory-robot-kolu",
+    url: "https://ufactory.robotsepeti.com/",
     siteName: "Robotsepeti",
     locale: "tr_TR",
     type: "website",
     images: [
       {
-        url: "https://robotsepeti.com.tr/images/ufactory_logo_bg.png", // Örnek OG resmi
+        url: "https://ufactory.robotsepeti.com/images/ufactory_logo_bg.png",
         width: 1200,
         height: 630,
         alt: "uFactory Robot Kolu - Robotsepeti",
@@ -50,9 +50,9 @@ const jsonLdSchema = {
     {
       "@type": "Organization",
       "name": "Robotsepeti",
-      "url": "https://robotsepeti.com.tr",
+      "url": "https://www.robotsepeti.com",
       "description": "uFactory yetkili distribütörü",
-      "logo": "https://robotsepeti.com.tr/images/robotsepeti_logo_cropped.png"
+      "logo": "https://ufactory.robotsepeti.com/images/robotsepeti_logo_cropped.png"
     },
     {
       "@type": "FAQPage",
