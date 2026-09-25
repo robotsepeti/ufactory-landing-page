@@ -234,6 +234,26 @@ interface Product {
   }[];
 }
 
+const CORPORATE_EMAIL = 'kurumsal@robotsepeti.com';
+
+const gmailLink = (subject: string, body: string) =>
+  'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(CORPORATE_EMAIL) +
+  '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+const quoteMailLink = (product: Product, variantIndex: number) => {
+  const variant = product.variants?.[variantIndex];
+  const model = variant ? `${variant.name} (${variant.desc})` : '-';
+  const subject = `Teklif Talebi: ${product.name}${variant ? ' - ' + variant.name : ''}`;
+  const body =
+    'Merhaba,\n\n' +
+    'Aşağıdaki ürün için fiyat teklifi almak istiyorum.\n\n' +
+    `Ürün: ${product.name}\n` +
+    `Model: ${model}\n` +
+    (variant?.url || product.url ? `Ürün bağlantısı: ${variant?.url || product.url}\n` : '') +
+    '\nAdet:\nFirma adı:\nAd Soyad:\nTelefon:\n\nTeşekkürler.';
+  return gmailLink(subject, body);
+};
+
 const HERO_VIDEOS = ['/videos/xarm.mp4', '/videos/lite6.mp4', '/videos/850_small.mp4'];
 
 const TIMELINE_DATA = [
@@ -1191,7 +1211,9 @@ const App = () => {
                     <div className="flex flex-col sm:flex-row gap-3 mt-4">
                       <Magnetic className="flex-1">
                         <a
-                          href="mailto:kurumsal@robotsepeti.com"
+                          href={quoteMailLink(selectedProduct, selectedVariant)}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           onClick={triggerSparks}
                           className="spark-host btn-glow bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-orange-500/30 hover:scale-[1.02] transition-all duration-300 w-full flex justify-center items-center gap-2 relative"
                         >
@@ -1470,7 +1492,7 @@ const App = () => {
              </div>
              <div className="lg:w-1/3 flex flex-col items-center lg:items-end w-full">
                 <Magnetic strength={0.2}>
-                  <a href="mailto:kurumsal@robotsepeti.com" className="btn-glow w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-orange-600/30 mb-4 inline-block text-center">
+                  <a href={gmailLink('uFactory Distribütör İletişim Talebi', 'Merhaba,\n\nuFactory ürünleri hakkında bilgi almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün/uygulama:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="btn-glow w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-orange-600/30 mb-4 inline-block text-center">
                     Distribütörle İletişime Geç
                   </a>
                 </Magnetic>
