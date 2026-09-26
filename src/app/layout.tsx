@@ -59,14 +59,6 @@ const jsonLdSchema = {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "uFactory ürünleri Türkiye garantisi kapsamında mı?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Evet, Robotsepeti üzerinden satın alınan tüm uFactory ürünleri resmi Türkiye distribütörü garantisi altındadır ve teknik destek tarafımızca sağlanmaktadır."
-          }
-        },
-        {
-          "@type": "Question",
           "name": "Hangi robot kolu benim endüstriyel projeme daha uygun?",
           "acceptedAnswer": {
             "@type": "Answer",
