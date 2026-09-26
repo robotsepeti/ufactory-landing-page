@@ -145,8 +145,15 @@ const ImageBlurUp = ({
   src, alt, className = '', draggable,
 }: { src: string; alt: string; className?: string; draggable?: boolean }) => {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+  // Önbellekten gelen görsellerde onLoad hidrasyondan önce tetiklenebilir; bu durumda da netleştir
+  useEffect(() => {
+    const node = imgRef.current;
+    if (node && node.complete && node.naturalWidth > 0) setLoaded(true);
+  }, [src]);
   return (
     <img
+      ref={imgRef}
       src={src}
       alt={alt}
       draggable={draggable}
@@ -221,7 +228,7 @@ interface Product {
   gallery?: string[];
   url: string;
   description: string;
-  price: string;
+  price?: string;
   specs: Record<string, string>;
   features?: string[];
   badge?: string;
@@ -483,22 +490,33 @@ const App = () => {
     setSelectedProduct(null);
   };
 
-  // Kapsamlı Ürün Veritabanı (Detaylı Rapor Verilerinden)
+  // Sektör kartlarındaki butonlar ilgili ürünün detayını katalogda açar
+  const openProductById = (tab: 'xarm' | 'lite' | 'accessories' | 'education', id: string) => {
+    const product = products[tab].find((p) => p.id === id);
+    if (!product) return;
+    setActiveTab(tab);
+    handleProductSelect(product);
+  };
+
+  // Ürün veritabanı — tüm bağlantılar doğrudan RobotSepeti ürün sayfalarına gider.
+  // Görseller RobotSepeti ürün sayfalarından alınmıştır (public/images/products/rs-*).
+  const RS = 'https://www.robotsepeti.com/';
+  const img = (name: string) => `/images/products/rs-${name}`;
   const products: Record<'xarm' | 'lite' | 'accessories' | 'education', Product[]> = {
     xarm: [
       {
         id: 'xarm7',
         name: 'uFactory xArm 7',
         tagline: '7 Eksenli Kinematik Artıklık',
-        image: '/images/xarm.png',
+        image: img('xarm7-1.webp'),
+        gallery: [img('xarm7-1.webp'), img('xarm7-2.jpg'), img('xarm7-3.jpg'), img('xarm7-4.png')],
         videoBg: '/videos/xarm7_yt.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+xarm+7',
-        description: 'Endüstriyel robot kolu uygulamalarında esnek hareket imkanı sağlayan 7 eksenli kinematik yapı. Dar alanlarda engellerden kaçınma yeteneği ve uzay sınıfı karbon fiber gövdesiyle 13.7 kg ağırlığında yüksek performanslı cobot.',
-        price: '644.399 TL - 662.428 TL + KDV',
-        specs: { 
-          'Taşıma Kapasitesi': '3.5 kg', 
-          'Erişim (Reach)': '700 mm', 
-          'Tekrarlanabilirlik': '±0.1 mm', 
+        url: RS + 'xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof',
+        description: 'Endüstriyel robot kolu uygulamalarında esnek hareket imkanı sağlayan 7 eksenli kinematik yapı. Dar alanlarda engellerden kaçınma yeteneği ve karbon fiber gövdesiyle 13.7 kg ağırlığında yüksek performanslı cobot.',
+        specs: {
+          'Taşıma Kapasitesi': '3.5 kg',
+          'Erişim (Reach)': '700 mm',
+          'Tekrarlanabilirlik': '±0.1 mm',
           'DoF': '7 Eksen',
           'Maks. Hız': '1 m/s',
           'Gövde Ağırlığı': '13.7 kg'
@@ -507,26 +525,26 @@ const App = () => {
         badge: 'Araştırma & VR',
         color: 'from-purple-600 to-pink-600',
         variants: [
-          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof', price: '650.991,69 TL + KDV' },
-          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-b', price: '650.991,69 TL + KDV' },
-          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-c', price: '659.540,87 TL + KDV' },
-          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: 'https://www.robotsepeti.com/xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-d', price: '669.205,15 TL + KDV' },
-          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-7-kolaboratif-cobot-isbirlikci-robot-kol-35kg-700mm-7-dof-ver-e', price: '659.494,40 TL + KDV' }
+          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof' },
+          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-b' },
+          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-c' },
+          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-d' },
+          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-kol-35kg-700mm-7-dof-ver-e' }
         ]
       },
       {
         id: 'xarm6',
         name: 'uFactory xArm 6',
-        tagline: 'Endüstriyel Üretim Standartı',
-        image: '/images/xarm.png',
+        tagline: 'Endüstriyel Üretim Standardı',
+        image: img('xarm6-1.jpg'),
+        gallery: [img('xarm6-1.jpg'), img('xarm6-2.jpg'), img('xarm6-3.jpg'), img('xarm6-4.png'), img('xarm6-5.jpg')],
         videoBg: '/videos/xarm.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+xarm+6',
+        url: RS + 'xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof',
         description: 'Endüstriyel üretim hatları, pick and place, montaj ve CNC tezgah yükleme işlemleri için tasarlanmış 5 kg payload kapasiteli 6 eksenli cobot. Ağır kütleli ürünlerin kavranmasında stabil ve güvenilirdir.',
-        price: '581.820 TL - 584.103 TL + KDV',
-        specs: { 
-          'Taşıma Kapasitesi': '5.0 kg', 
-          'Erişim (Reach)': '700 mm', 
-          'Tekrarlanabilirlik': '±0.1 mm', 
+        specs: {
+          'Taşıma Kapasitesi': '5.0 kg',
+          'Erişim (Reach)': '700 mm',
+          'Tekrarlanabilirlik': '±0.1 mm',
           'DoF': '6 Eksen',
           'Maks. Hız': '1 m/s',
           'Gövde Ağırlığı': '12.2 kg'
@@ -535,26 +553,26 @@ const App = () => {
         badge: 'En Popüler',
         color: 'from-blue-600 to-cyan-600',
         variants: [
-          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof', price: '579.299,44 TL + KDV' },
-          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-b', price: '579.299,44 TL + KDV' },
-          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-c', price: '587.755,68 TL + KDV' },
-          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: 'https://www.robotsepeti.com/xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-d', price: '597.512,89 TL + KDV' },
-          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-6-kolaboratif-cobot-isbirlikci-robot-kol-5kg-700mm-6-dof-ver-e', price: '590.078,83 TL + KDV' }
+          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof' },
+          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-b' },
+          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-c' },
+          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-d' },
+          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-kol-5kg-700mm-6-dof-ver-e' }
         ]
       },
       {
         id: 'uf850',
         name: 'uFactory 850',
         tagline: 'Yüksek Hassasiyet, Maksimum Erişim',
-        image: '/images/ufactory_850.jpg',
+        image: img('uf850-1.png'),
+        gallery: [img('uf850-1.png'), img('uf850-2.png'), img('uf850-3.png'), img('uf850-4.jpg')],
         videoBg: '/videos/850_small.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+850',
+        url: RS + 'ufactory-850-cobot-isbirlikci-robot-kol-5kg-850mm-6-dof-karbon-fiber',
         description: 'Daha uzun erişim mesafesine (850 mm) ihtiyaç duyan otomasyon projeleri için tasarlanmıştır. 17-bit yüksek çözünürlüklü enkoder sayesinde ±0.02 mm tekrar konumlandırma hassasiyeti sunar.',
-        price: '$8.999 - $10.500 (Global Band)',
-        specs: { 
-          'Taşıma Kapasitesi': '5.0 kg', 
-          'Erişim (Reach)': '850 mm', 
-          'Tekrarlanabilirlik': '±0.02 mm', 
+        specs: {
+          'Taşıma Kapasitesi': '5.0 kg',
+          'Erişim (Reach)': '850 mm',
+          'Tekrarlanabilirlik': '±0.02 mm',
           'DoF': '6 Eksen',
           'Güç Tüketimi': '240W (Maks 1000W)',
           'Gövde Ağırlığı': '20.0 kg'
@@ -567,15 +585,14 @@ const App = () => {
         id: 'xarm5',
         name: 'uFactory xArm 5 Lite',
         tagline: 'Ekonomik SCARA Alternatifi',
-        image: '/images/xarm.png',
-        videoBg: '/videos/xarm.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+xarm+5',
+        image: img('xarm5-1.jpg'),
+        gallery: [img('xarm5-1.jpg'), img('xarm5-2.jpg'), img('xarm5-3.jpg'), img('xarm5-4.jpg'), img('xarm5-5.jpg')],
+        url: RS + 'xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof',
         description: 'Yatay düzlemdeki pick and place ve otomasyon görevleri için tasarlanmış 5 eksenli robot kolu. SCARA robot alternatiflerine göre uygun maliyetli bir çözümdür.',
-        price: '372.898 TL - 374.194 TL + KDV',
-        specs: { 
-          'Taşıma Kapasitesi': '3.0 kg', 
-          'Erişim (Reach)': '700 mm', 
-          'Tekrarlanabilirlik': '±0.1 mm', 
+        specs: {
+          'Taşıma Kapasitesi': '3.0 kg',
+          'Erişim (Reach)': '700 mm',
+          'Tekrarlanabilirlik': '±0.1 mm',
           'DoF': '5 Eksen',
           'Min. Enerji': '8.4 Watt',
           'Gövde Ağırlığı': '11.2 kg'
@@ -584,11 +601,11 @@ const App = () => {
         badge: 'Giriş Seviyesi',
         color: 'from-emerald-600 to-teal-600',
         variants: [
-          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof', price: '369.658,83 TL + KDV' },
-          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: 'https://www.robotsepeti.com/xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-b', price: '369.658,83 TL + KDV' },
-          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-c', price: '378.068,62 TL + KDV' },
-          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: 'https://www.robotsepeti.com/xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-d', price: '387.779,36 TL + KDV' },
-          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: 'https://www.robotsepeti.com/xarm-5-lite-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5-dof-ver-e', price: '378.022,15 TL + KDV' }
+          { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof' },
+          { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-b' },
+          { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-c' },
+          { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-d' },
+          { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-5-lite-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5-dof-ver-e' }
         ]
       }
     ],
@@ -597,22 +614,26 @@ const App = () => {
         id: 'lite6',
         name: 'uFactory Lite 6',
         tagline: 'Kompakt Masaüstü Cobot',
-        image: '/images/lite6.png',
+        image: img('lite6-1.jpg'),
+        gallery: [img('lite6-1.jpg'), img('lite6kit-1.jpg')],
         videoBg: '/videos/lite6.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+lite+6',
-        description: 'Alan kısıtlamasının olduğu laboratuvar prosesleri ve hafif endüstriyel görevler için 600g taşıma kapasitesi. Dahili kontrol kutusu ve 130x140 mm minimal oturma alanıyla tak-çalıştır kullanım.',
-        price: 'Projeye Özel Teklif Alın',
-        specs: { 
-          'Taşıma Kapasitesi': '600 g', 
-          'Erişim (Reach)': '440 mm', 
-          'Tekrarlanabilirlik': '±0.5 mm', 
+        url: RS + 'lite-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-1kg-440mm-6dof',
+        description: 'Alan kısıtlamasının olduğu laboratuvar prosesleri ve hafif endüstriyel görevler için 600 g taşıma kapasitesi. Dahili kontrol kutusu ve 130x140 mm minimal oturma alanıyla tak-çalıştır kullanım.',
+        specs: {
+          'Taşıma Kapasitesi': '600 g',
+          'Erişim (Reach)': '440 mm',
+          'Tekrarlanabilirlik': '±0.5 mm',
           'DoF': '6 Eksen',
           'Kontrol Kutusu': 'Gövdeye Dahil',
           'Gövde Ağırlığı': '7.2 kg'
         },
         features: ['Dahili Kontrol Kutusu (Build-in)', '130x140mm Kompakt Oturma Alanı', 'Tam ROS/ROS2 Uyumluluğu', 'Harmonik Redüktör & BLDC'],
         badge: 'AR-GE & Eğitim',
-        color: 'from-slate-700 to-slate-900'
+        color: 'from-slate-700 to-slate-900',
+        variants: [
+          { name: 'Lite 6', desc: 'Robot kol', url: RS + 'lite-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-1kg-440mm-6dof' },
+          { name: 'Lite 6 Kit', desc: 'Robot kol kiti', url: RS + 'lite-6-kolaboratif-robot-kiti' }
+        ]
       }
     ],
     accessories: [
@@ -620,11 +641,10 @@ const App = () => {
         id: 'gripper-xarm',
         name: 'uFactory xArm Gripper G2',
         tagline: '2 Parmaklı Elektrikli Paralel Tutucu',
-        image: '/images/products/gripper_g2_1.jpg',
-        gallery: ['/images/products/gripper_g2_1.jpg', '/images/products/gripper_g2_2.jpg'],
-        url: 'https://www.robotsepeti.com/ufactory-xarm-gripper-g2-elektrikli-paralel-robot-tutucu',
-        description: 'Gelişmiş endüstriyel otomasyon süreçleri için tasarlanan xArm Gripper G2, 5 kg payload desteği ve 50N maksimum kavrama gücü ile zorlu tutma/bırakma (pick & place) operasyonlarında üstün stabilite sunar. Dahili 12-bit mutlak enkoder (absolute encoder) sistemi sayesinde sadece ağır cisimleri değil, son derece kırılgan ve hassas malzemeleri de milimetrik bir kuvvet kontrolüyle güvenle taşır. Harici kablolamaya son veren temiz entegrasyonu ve kolayca değiştirilebilen parmak uçlarıyla esnek üretim hatlarının vazgeçilmezidir.',
-        price: '128.778 TL + KDV',
+        image: img('g2-1.jpg'),
+        gallery: [img('g2-1.jpg'), img('g2-2.jpg')],
+        url: RS + 'ufactory-xarm-gripper-g2-elektrikli-paralel-robot-tutucu',
+        description: 'Gelişmiş endüstriyel otomasyon süreçleri için tasarlanan xArm Gripper G2, 5 kg payload desteği ve 50N maksimum kavrama gücü ile zorlu tutma/bırakma (pick & place) operasyonlarında üstün stabilite sunar. Dahili 12-bit mutlak enkoder sistemi sayesinde yalnızca ağır cisimleri değil, kırılgan ve hassas malzemeleri de kontrollü kuvvetle güvenle taşır. Harici kablolamaya son veren temiz entegrasyonu ve kolayca değiştirilebilen parmak uçlarıyla esnek üretim hatlarına uygundur.',
         specs: { 'Strok Mesafesi': '84 ± 1 mm', 'Kavrama Kuvveti': '10 - 50 N', 'Kapanma Hızı': '15 - 225 mm/s' },
         features: ['12-Bit Hassas Mutlak Enkoder', 'Programlanabilir Hız, Kuvvet ve Konum', 'Kablosuz (Pogopin) Ara Yüz Entegrasyonu', '2 Milyon+ Operasyon Ömrü'],
         color: 'from-gray-600 to-gray-800'
@@ -633,25 +653,23 @@ const App = () => {
         id: 'bio',
         name: 'uFactory xArm BIO Gripper G2',
         tagline: 'Elektrikli Paralel Sıvı Taşıma Tutucusu',
-        image: '/images/products/bio_gripper_1.jpg',
+        image: img('bio-1.webp'),
         videoBg: '/videos/bio_gripper.mp4',
-        gallery: ['/images/products/bio_gripper_1.jpg', '/images/products/bio_gripper_2.jpg'],
-        url: 'https://www.robotsepeti.com/ufactory-xarm-bio-gripper-g2-elektrikli-paralel-robot-tutucu',
-        description: 'Hassas sıvı transferi ve gelişmiş laboratuvar otomasyonu süreçleri için özel olarak mühendisliği yapılmış BIO Gripper G2, esnek işbirlikçi yapısıyla ön plana çıkar. Değiştirilebilir parmak uçları sayesinde farklı deney tüplerine kolayca uyum sağlarken, akıllı programlama mimarisi (hız, pozisyon ve kuvvet kontrolü) ile projelerinize anında entegre olur. Güvenilir endüstriyel sıvı taşıma operasyonlarında maksimum güvenlik sunan birinci sınıf bir end-efektördür.',
-        price: '115.164 TL + KDV',
+        gallery: [img('bio-1.webp'), img('bio-2.webp'), img('bio-3.webp'), img('bio-4.webp')],
+        url: RS + 'ufactory-xarm-bio-gripper-g2-elektrikli-paralel-robot-tutucu',
+        description: 'Hassas sıvı transferi ve laboratuvar otomasyonu süreçleri için geliştirilen BIO Gripper G2, esnek işbirlikçi yapısıyla öne çıkar. Değiştirilebilir parmak uçları sayesinde farklı deney tüplerine kolayca uyum sağlarken hız, pozisyon ve kuvvet kontrolüyle projelere hızla entegre olur.',
         specs: { 'Strok (Açıklık)': '71 - 150 mm', 'Kavrama Gücü': '20N', 'Haberleşme': 'RS-485 (Modbus-RTU)' },
         features: ['Düşme (Drop) & Kavrama Algılama', 'Hız (0-4000) ve Kuvvet Kontrolü', 'Değiştirilebilir Uç Tasarımı', '24 VDC (1.5A Tepe) Anma Gerilimi'],
         color: 'from-gray-600 to-gray-800'
       },
       {
         id: 'vacuum',
-        name: 'xArm Vacuum Gripper',
+        name: 'uFactory xArm Vacuum Gripper',
         tagline: 'Entegre Pompasıyla Pürüzsüz Tutuş',
-        image: '/images/products/vacuum_gripper_1.jpg',
-        gallery: ['/images/products/vacuum_gripper_1.jpg', '/images/products/vacuum_gripper_2.jpg', '/images/products/vacuum_gripper_3.jpg'],
-        url: 'https://www.robotsepeti.com/arama?q=xarm+vacuum',
-        description: 'Elektrikli vakum jeneratörü ile harici kompresör ihtiyacını bitirir. -55kPa vakum seviyesi. Düz yüzeyli metaller veya karton kutular için 5kg tam kapasite uyumu.',
-        price: '37.253 TL + KDV',
+        image: img('vac-1.jpg'),
+        gallery: [img('vac-1.jpg'), img('vac-2.jpg'), img('vac-3.jpg'), img('vac-4.jpg')],
+        url: RS + 'ufactory-xarm-vacuum-gripper',
+        description: 'Elektrikli vakum jeneratörü ile harici kompresör ihtiyacını ortadan kaldırır. -55 kPa vakum seviyesi; düz yüzeyli metaller veya karton kutular için 5 kg tam kapasite uyumu.',
         specs: { 'Vakum Seviyesi': '-55kPa (%78)', 'Hava Akışı': '4 L/dakika', 'Kapasite': '5 kg' },
         color: 'from-gray-600 to-gray-800'
       },
@@ -659,36 +677,48 @@ const App = () => {
         id: 'gripper-lite',
         name: 'Gripper Lite & Vacuum Lite',
         tagline: 'Lite 6 Özel Uç Efektörleri',
-        image: '/images/products/lite_grippers_1.jpg',
-        gallery: ['/images/products/lite_grippers_1.jpg', '/images/products/lite_grippers_2.jpg'],
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+lite+gripper',
-        description: 'Masaüstü Lite 6 serisi için 350g ağırlığında elektrikli tutucu (5N kuvvet, 16mm strok) ve 250g ağırlığında vakum (-40kPa) tutucu versiyonları.',
-        price: '23.456 TL - 29.895 TL + KDV',
+        image: img('glite-2.jpg'),
+        gallery: [img('glite-2.jpg'), img('glite-1.jpg'), img('vlite-3.jpg'), img('vlite-1.jpg'), img('vlite-2.jpg')],
+        url: RS + 'gripper-lite-ufactory-lite-6-robot-kol-icin-tutucu',
+        description: 'Masaüstü Lite 6 serisi için 350 g ağırlığında elektrikli tutucu (5N kuvvet, 16 mm strok) ve 250 g ağırlığında vakum (-40 kPa) tutucu versiyonları.',
         specs: { 'Kuvvet / Basınç': '5N / -40kPa', 'Ağırlık': '250g - 350g', 'Geri Bildirim': 'Pick-Up Detection' },
-        color: 'from-gray-600 to-gray-800'
+        color: 'from-gray-600 to-gray-800',
+        variants: [
+          { name: 'Gripper Lite', desc: 'Elektrikli tutucu', url: RS + 'gripper-lite-ufactory-lite-6-robot-kol-icin-tutucu' },
+          { name: 'Vacuum Lite', desc: 'Vakum tutucu', url: RS + 'vacuum-gripper-lite-lite-6-robot-kol-icin-vakum-tutucu' }
+        ]
       },
       {
         id: 'ft-sensor',
         name: '6 Eksenli Kuvvet/Tork Sensörü',
         tagline: 'Robota Dokunma Duyusu Kazandırın',
-        image: '/images/products/linear_motor_1.jpg',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+force+torque+sensor',
-        description: 'x/y/z eksenlerindeki kuvvetleri ve tork momentlerini 100mN (10 gram) laboratuvar hassasiyetiyle ölçer. Hassas polisaj ve mil-delik montajı için force/impedance kontrolü.',
-        price: '198.135 TL + KDV',
+        image: img('ft-1.jpg'),
+        gallery: [img('ft-1.jpg'), img('ft-2.jpg'), img('ft-3.jpg')],
+        url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu',
+        description: 'x/y/z eksenlerindeki kuvvetleri ve tork momentlerini 100 mN hassasiyetle ölçer. Hassas polisaj ve mil-delik montajı için kuvvet/empedans kontrolü sağlar.',
         specs: { 'Kuvvet Aralığı': '150N - 200N', 'Tork Aralığı': '4Nm', 'Çözünürlük': '100mN / 5mNm' },
-        color: 'from-slate-700 to-slate-900'
+        color: 'from-slate-700 to-slate-900',
+        variants: [
+          { name: 'Sensör', desc: 'xArm uyumlu kuvvet/tork sensörü', url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu' },
+          { name: 'xArm 6 + Sensör', desc: 'xArm 6 ile birlikte', url: RS + 'xarm-6-kolaboratif-robot-6-eksen-kuvvet-tork-sensoru' }
+        ]
       },
       {
         id: 'linear-motor',
         name: 'Direct Drive Lineer Motor',
         tagline: 'Otonomiyi Raylara Taşıyın',
-        image: '/images/products/linear_motor_2.jpg',
-        gallery: ['/images/products/linear_motor_1.jpg', '/images/products/linear_motor_2.jpg', '/images/products/linear_motor_3.jpg', '/images/products/linear_motor_4.jpg'],
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+linear+motor',
-        description: 'Sürtünmesiz doğrudan tahrik ile robotu çoklu CNC tezgahlarına taşıyan ray sistemi. Saniyede 1 metre hız, 200 kg taşıma kapasitesi ve devasa 160N tepe kuvveti.',
-        price: '299.366 TL - 307.091 TL + KDV',
+        image: img('lin700-1.webp'),
+        gallery: [img('lin700-1.webp'), img('lin700-2.jpg'), img('lin700-3.jpg'), img('lin700-4.webp'), img('lin700-5.jpg')],
+        url: RS + 'direct-drive-lineer-motor-xarm-6-uyumlu',
+        description: 'Sürtünmesiz doğrudan tahrik ile robotu birden fazla iş istasyonu arasında taşıyan ray sistemi. Saniyede 1 metre hız, 200 kg taşıma kapasitesi ve 160N tepe kuvveti.',
         specs: { 'Menzil (Strok)': '700/1000/1500 mm', 'Hız': '1 m/s', 'Yük (Payload)': '200 kg' },
-        color: 'from-slate-700 to-slate-900'
+        color: 'from-slate-700 to-slate-900',
+        variants: [
+          { name: '700 mm', desc: 'xArm uyumlu lineer motor', url: RS + 'direct-drive-lineer-motor-xarm-6-uyumlu' },
+          { name: '1000 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1000mm' },
+          { name: '1500 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1500mm' },
+          { name: 'xArm 6 + Motor', desc: 'xArm 6 ile birlikte', url: RS + 'xarm-6-kolaboratif-robot-direct-drive-lineer-motor' }
+        ]
       }
     ],
     education: [
@@ -696,26 +726,27 @@ const App = () => {
         id: 'conveyor-kit',
         name: 'uArm Robotik Eğitim Kiti',
         tagline: 'Konveyör Taşıyıcı Bant Simülasyonu',
-        image: '/images/products/uarm_education_1.jpg',
-        gallery: ['/images/products/uarm_education_1.jpg', '/images/products/uarm_education_2.jpg', '/images/products/uarm_education_3.jpg'],
-        videoBg: '/videos/xarm.mp4',
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+uarm+egitim+kiti',
-        description: 'Üniversite laboratuvarları ve mesleki teknik eğitim merkezleri için eksiksiz Endüstri 4.0 simülasyonu. Nesne tespiti, sorting ve paletleme algoritmalarını doğrudan Python veya ROS üzerinden uygulayın.',
-        price: '66.045 TL + KDV',
+        image: img('conv-1.jpg'),
+        gallery: [img('conv-1.jpg'), img('conv-2.jpg'), img('conv-3.jpg'), img('conv-4.webp'), img('slider-1.jpg'), img('slider-2.jpg'), img('slider-4.webp'), img('slider-5.webp')],
+        url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor',
+        description: 'Üniversite laboratuvarları ve mesleki teknik eğitim merkezleri için Endüstri 4.0 simülasyonu. Nesne tespiti, ayıklama (sorting) ve paletleme uygulamalarını doğrudan Python veya ROS üzerinden gerçekleştirin.',
         specs: { 'Platform': 'uArm Uyumlu', 'Sensör Desteği': 'Renk / Boyut Ayrımı', 'Yazılım': 'Python / Blockly' },
         features: ['Laboratuvar Masası Ölçeği', 'Gerçek Zamanlı Görüntü İşleme Entegrasyonu', 'Endüstri 4.0 Simülasyonu', 'STEM / STEAM Uyumluluğu'],
         badge: 'AR-GE Eğitim',
-        color: 'from-indigo-600 to-blue-800'
+        color: 'from-indigo-600 to-blue-800',
+        variants: [
+          { name: 'Konveyör Kiti', desc: 'Conveyor eğitim kiti', url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor' },
+          { name: 'Slider + Konveyör', desc: 'Slider conveyor eğitim kiti', url: RS + 'uarm-egitim-kiti-slider-conveyor' }
+        ]
       },
       {
         id: 'laser-head',
         name: 'uArm Laser Head',
         tagline: 'Lazer Gravür ve Eksiltmeli İmalat',
-        image: '/images/products/uarm_laser_1.jpg',
-        gallery: ['/images/products/uarm_laser_1.jpg', '/images/products/uarm_laser_2.jpg', '/images/products/uarm_laser_3.jpg'],
-        url: 'https://www.robotsepeti.com/arama?q=ufactory+uarm+laser',
-        description: 'Robot kolunuzu 3D lazer CNC ve gravür makinesine dönüştüren lazer modülü. Ahşap levhalar, MDF, karton ve deri yüzeyler üzerinde hassas yüzey işleme (processing) ve eksiltmeli imalat.',
-        price: '7.995 TL - 8.002 TL + KDV',
+        image: img('laser-3.jpg'),
+        gallery: [img('laser-3.jpg'), img('laser-1.jpg'), img('laser-2.jpg'), img('laser-4.jpg'), img('laser-5.jpg')],
+        url: RS + 'uarm-laser-head-lazer-gravur-kafasi',
+        description: 'uArm robot kolunu lazer gravür makinesine dönüştüren lazer modülü. Ahşap, MDF, karton ve deri yüzeyler üzerinde hassas gravür ve işleme.',
         specs: { 'Uygulama': 'Gravür / Kesim', 'Materyal': 'Ahşap, MDF, Deri', 'Ekipman': 'Güvenlik Gözlüğü Dahil' },
         color: 'from-red-600 to-orange-800'
       }
@@ -767,12 +798,27 @@ const App = () => {
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden flex items-center">
-              <button onClick={toggleMenu} className="text-slate-900">
+              <button onClick={toggleMenu} className="text-slate-900" aria-label={isMenuOpen ? 'Menüyü kapat' : 'Menüyü aç'} aria-expanded={isMenuOpen}>
                 {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
           </div>
         </div>
+        {isMenuOpen && (
+          <div className="lg:hidden bg-white border-t border-slate-200 shadow-lg">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col font-semibold text-slate-700">
+              {[
+                ['#katalog', 'Teknik Özellikler'],
+                ['#yazilim', 'Yazılım Ekosistemi'],
+                ['#vakalar', 'Sektörler'],
+                ['#avantajlar', 'Avantajlar & SSS'],
+                ['#iletisim', 'Projeyi Anlat'],
+              ].map(([href, label]) => (
+                <a key={href} href={href} onClick={() => setIsMenuOpen(false)} className="py-3 px-2 border-b border-slate-100 last:border-0 hover:text-orange-600">{label}</a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -928,43 +974,24 @@ const App = () => {
                 key={product.id}
                 onClick={() => handleProductSelect(product)}
                 style={{ animationDelay: `${idx * 90}ms` }}
-                className="animate-fade-up group cursor-pointer rounded-3xl bg-white border border-slate-200 overflow-hidden hover:border-orange-500/50 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.22)] flex flex-col h-[520px]"
+                className="animate-fade-up group cursor-pointer rounded-3xl bg-white border border-slate-200 overflow-hidden hover:border-orange-500/50 hover:shadow-[0_25px_60px_-15px_rgba(0,0,0,0.22)] flex flex-col min-h-[520px]"
               >
-                <div className="h-[55%] relative overflow-hidden bg-slate-100 flex items-center justify-center">
+                <div className="h-[280px] shrink-0 relative overflow-hidden bg-white border-b border-slate-100 flex items-center justify-center">
                   {product.badge && (
                     <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md border border-slate-200 text-slate-900 text-[10px] font-bold px-3 py-1.5 rounded-full z-20 tracking-widest uppercase shadow-sm">
                       {product.badge}
                     </div>
                   )}
-                  {/* Video or Image Background for Card */}
-                  {product.videoBg ? (
-                    <video
-                      preload="auto"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      aria-label={`${product.name} endüstriyel robot kolu — Robotsepeti`}
-                      className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-110 transition-all duration-700"
-                      src={product.videoBg}
-                    />
-                  ) : product.image ? (
-                    <ImageBlurUp
-                      src={product.image}
-                      alt={`${product.name} — Robotsepeti uFactory Türkiye`}
-                      className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 w-full h-full bg-white flex items-center justify-center">
-                      <Settings size={48} className="text-white/10" />
-                    </div>
-                  )}
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-orange-50 via-white/70 to-transparent z-10"></div>
-                  <div className={`absolute inset-0 bg-gradient-to-br ${product.color} opacity-10 group-hover:opacity-20 transition-opacity duration-500 z-10`}></div>
+                  {/* Ürün görseli (RobotSepeti ürün fotoğrafı) */}
+                  <ImageBlurUp
+                    src={product.image}
+                    alt={`${product.name} — Robotsepeti uFactory Türkiye`}
+                    className="absolute inset-0 w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${product.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 z-10 pointer-events-none`}></div>
                 </div>
 
-                <div className="tilt-card-inner p-8 h-[45%] flex flex-col justify-between bg-white">
+                <div className="tilt-card-inner p-8 flex-1 flex flex-col justify-between bg-white">
                   <div>
                     <h3 className="text-2xl font-bold text-slate-900 mb-2">{product.name}</h3>
                     <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mb-4">{product.tagline}</p>
@@ -1120,20 +1147,18 @@ const App = () => {
                       <Settings size={280} />
                     </div>
 
-                    {/* Price Badge */}
-                    {(selectedProduct.variants?.[selectedVariant]?.price || selectedProduct.price) && (
-                      <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/5 border border-green-500/20">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-green-600 text-[10px] font-bold tracking-widest uppercase">
-                            {selectedProduct.variants ? 'Seçili Versiyon Fiyatı' : 'Fiyat Skalası'}
-                          </span>
-                        </div>
-                        <p className="text-green-700 font-bold text-sm">
-                          {selectedProduct.variants?.[selectedVariant]?.price || selectedProduct.price}
-                        </p>
+                    {/* Fiyat bilgisi — güncel fiyat RobotSepeti ürün sayfasında */}
+                    <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/5 border border-green-500/20">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-green-600 text-[10px] font-bold tracking-widest uppercase">Fiyat ve Stok</span>
                       </div>
-                    )}
+                      <p className="text-green-800 text-sm">
+                        Güncel fiyat, stok ve teslim süresi için{' '}
+                        <a href={selectedProduct.variants?.[selectedVariant]?.url || selectedProduct.url} target="_blank" rel="noopener noreferrer" className="font-bold underline underline-offset-2 hover:text-orange-600">RobotSepeti ürün sayfasına</a>{' '}
+                        bakın veya teklif isteyin.
+                      </p>
+                    </div>
 
                     {/* Variants Selection */}
                     {selectedProduct.variants && selectedProduct.variants.length > 0 && (
@@ -1234,7 +1259,7 @@ const App = () => {
                       </Magnetic>
                       <Magnetic className="flex-1">
                         <a href={selectedProduct.variants?.[selectedVariant]?.url || selectedProduct.url || "https://www.robotsepeti.com"} target="_blank" rel="noopener noreferrer" className="bg-slate-100 text-slate-900 border border-slate-200 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-slate-200 transition-all duration-300 w-full flex justify-center items-center gap-2">
-                          <Globe size={18} /> {selectedProduct.variants ? selectedProduct.variants[selectedVariant].name : selectedProduct.name} İncele
+                          <Globe size={18} /> RobotSepeti&apos;nde İncele
                         </a>
                       </Magnetic>
                     </div>
@@ -1347,7 +1372,7 @@ const App = () => {
                     <h3 className="text-2xl font-bold text-slate-900">Aivero: 3B Bin Picking</h3>
                   </div>
                   <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden olan düzensiz kutu içi parça alma işlemini, bulut tabanlı 3B vizyon ve makine öğrenimi ile xArm'a entegre ederek hücre maliyetini 10.000$ altına indirdiler.</p>
-                  <a href="https://www.robotsepeti.com/arama?q=ufactory" target="_blank" rel="noopener noreferrer" className="text-orange-400 font-bold text-sm uppercase tracking-wider group-hover:text-orange-300 flex items-center">uFactory Çözümlerini İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></a>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 2 */}
@@ -1357,7 +1382,7 @@ const App = () => {
                     <h3 className="text-2xl font-bold text-slate-900">Extend Robotics: VR Tele-Operasyon</h3>
                   </div>
                   <p className="text-slate-600 mb-6 line-clamp-3">Tehlikeli nükleer veya kimyasal alanlardaki görevleri insan zekasıyla çözmek için xArm sistemlerini Sanal Gerçeklik (VR) gözlükleriyle uzaktan, sezgisel bir insan kolu gibi yönettiler.</p>
-                  <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 font-bold text-sm uppercase tracking-wider group-hover:text-orange-300 flex items-center">Senaryoyu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></a>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm7')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 7 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 3 */}
@@ -1367,7 +1392,7 @@ const App = () => {
                     <h3 className="text-2xl font-bold text-slate-900">Botlegger & VLT: Foodtech Otomasyonu</h3>
                   </div>
                   <p className="text-slate-600 mb-6 line-clamp-3">Yüksek işçi devir hızına karşı kahve baristaları, dondurma otomatları ve hatta sıcak yağda falafel kızartma işlemleri için xArm ve Lite 6 ile otonom, standart hizmet sunan kiosklar yaratıldı.</p>
-                  <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 font-bold text-sm uppercase tracking-wider group-hover:text-orange-300 flex items-center">Senaryoyu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></a>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm5')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 5 Lite Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 4 */}
@@ -1377,7 +1402,7 @@ const App = () => {
                     <h3 className="text-2xl font-bold text-slate-900">RoboHub Eindhoven: Mobil AMR</h3>
                   </div>
                   <p className="text-slate-600 mb-6 line-clamp-3">Eindhoven Teknoloji Üniversitesi ekibi, RoboCup@Work uluslararası yarışmasında Otonom Mobil Robot (AMR) üzerinde Lite 6'yı şasi olarak kullanarak entegre otonomi sağladı.</p>
-                  <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 font-bold text-sm uppercase tracking-wider group-hover:text-orange-300 flex items-center">Senaryoyu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></a>
+                  <button type="button" onClick={() => openProductById('lite', 'lite6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">Lite 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
             </div>
          </div>
@@ -1449,10 +1474,6 @@ const App = () => {
           </div>
 
           <div className="space-y-6">
-            <Reveal variant="up" delay={1} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
-              <h3 className="text-lg font-bold text-slate-900 mb-2">uFactory ürünleri Türkiye garantisi kapsamında mı?</h3>
-              <p className="text-slate-600">Evet, Robotsepeti üzerinden satın alınan tüm uFactory ürünleri resmi Türkiye distribütörü garantisi altındadır ve teknik destek tarafımızca sağlanmaktadır.</p>
-            </Reveal>
             <Reveal variant="up" delay={2} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
               <h3 className="text-lg font-bold text-slate-900 mb-2">Hangi robot kolu benim endüstriyel projeme daha uygun?</h3>
               <p className="text-slate-600">Seçim yaparken payload kapasitesi ve tekrar konumlandırma hassasiyeti kritiktir. xArm 6 genel endüstriyel kullanım, xArm 7 ise engelden kaçınma ve dar alanlar için idealdir. Detaylı teknik analiz için mühendislik ekibimizle görüşebilirsiniz.</p>
@@ -1496,7 +1517,7 @@ const App = () => {
                     Distribütörle İletişime Geç
                   </a>
                 </Magnetic>
-                <span className="text-slate-500 font-bold flex items-center gap-2">0212 697 62 12 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></span>
+                <a href="tel:+902126976212" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 12 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
              </div>
           </div>
 
@@ -1526,20 +1547,21 @@ const App = () => {
             <div>
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">İletişim</h4>
               <ul className="space-y-4">
-                <li className="font-bold text-slate-900">Telefon: +90 850 318 80 50</li>
-                <li><a href="mailto:kurumsal@robotsepeti.com" className="hover:text-orange-400">kurumsal@robotsepeti.com</a></li>
-                <li><a href="mailto:destek@robotsepeti.com" className="hover:text-orange-400">destek@robotsepeti.com</a></li>
-                <li>Web: www.robotsepeti.com</li>
-                <li className="leading-relaxed text-slate-500 mt-4">Teknopark İstanbul, Sanayi Mah. Teknopark Bulvarı, No: 1/1A, Pendik, İstanbul</li>
+                <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976212" className="hover:text-orange-500">+90 212 697 62 12</a></li>
+                <li>WhatsApp: <a href="https://wa.me/905426976214" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">+90 542 697 62 14</a></li>
+                <li>Kurumsal teklif: <a href={gmailLink('uFactory Kurumsal Teklif Talebi', 'Merhaba,\n\nuFactory ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
+                <li>Teknik destek: <a href="mailto:destek@robotsepeti.com" className="hover:text-orange-500">destek@robotsepeti.com</a></li>
+                <li>Web: <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">www.robotsepeti.com</a></li>
+                <li className="leading-relaxed text-slate-500 mt-4">ROBOTSEPETİ Teknoloji A.Ş. — İstasyon Mah., Halkalı İstasyon Cad. No: 38/1, Küçükçekmece, İstanbul</li>
               </ul>
             </div>
             <div>
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Hızlı Linkler</h4>
               <ul className="space-y-4">
-                <li><a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">uFactory Teknik Dokümanlar</a></li>
-                <li><a href="https://github.com/UFACTORY" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">ROS / ROS2 GitHub Repoları</a></li>
-                <li><a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">uFactory Studio İndir</a></li>
-                <li><a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">uFactory Robotik Kol Eğitim Kitleri</a></li>
+                <li><a href="https://www.robotsepeti.com/ufactory" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">Tüm uFactory Ürünleri (RobotSepeti)</a></li>
+                <li><a href="#katalog" className="hover:text-orange-500 transition-colors">Robot Kolları ve Teknik Özellikler</a></li>
+                <li><a href="#yazilim" className="hover:text-orange-500 transition-colors">Yazılım Ekosistemi ve Güvenlik</a></li>
+                <li><a href="https://github.com/xArm-Developer" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">xArm SDK ve ROS / ROS2 (GitHub)</a></li>
               </ul>
             </div>
             <div>
@@ -1551,7 +1573,7 @@ const App = () => {
           </div>
           
           <div className="mt-16 text-center text-[10px] text-slate-600 font-bold tracking-[0.2em] uppercase">
-            © 2024 Robotsepeti Teknoloji A.Ş. & uFactory. Tüm hakları saklıdır. uFactory Türkiye Yetkili Distribütörü.
+            © {new Date().getFullYear()} Robotsepeti Teknoloji A.Ş. & uFactory. Tüm hakları saklıdır. uFactory Türkiye Yetkili Distribütörü.
           </div>
         </div>
       </footer>
