@@ -242,6 +242,15 @@ interface Product {
 }
 
 const CORPORATE_EMAIL = 'kurumsal@robotsepeti.com';
+const WHATSAPP_NUMBER = '905426976214';
+const WHATSAPP_DISPLAY = '+90 542 697 62 14';
+
+/* WhatsApp logosu (resmi logo formunda, satır içi SVG) */
+const WhatsAppIcon = ({ size = 18, className = '' }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true" fill="currentColor">
+    <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.05 21.5h-.01a9.5 9.5 0 0 1-4.84-1.33l-.35-.21-3.6.94.96-3.5-.23-.36a9.46 9.46 0 0 1-1.45-5.05c0-5.24 4.27-9.5 9.52-9.5 2.54 0 4.93.99 6.72 2.79a9.43 9.43 0 0 1 2.78 6.72c0 5.24-4.27 9.5-9.5 9.5zm8.09-17.6A11.37 11.37 0 0 0 12.05.55C5.73.55.6 5.68.6 12c0 2.02.53 3.99 1.53 5.72L.5 23.45l5.87-1.54a11.4 11.4 0 0 0 5.67 1.45h.01c6.31 0 11.45-5.13 11.45-11.45 0-3.06-1.19-5.94-3.36-8.1z"/>
+  </svg>
+);
 
 const gmailLink = (subject: string, body: string) =>
   'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(CORPORATE_EMAIL) +
@@ -725,11 +734,11 @@ const App = () => {
       {
         id: 'conveyor-kit',
         name: 'uArm Robotik Eğitim Kiti',
-        tagline: 'Konveyör Taşıyıcı Bant Simülasyonu',
-        image: img('conv-1.jpg'),
-        gallery: [img('conv-1.jpg'), img('conv-2.jpg'), img('conv-3.jpg'), img('conv-4.webp'), img('slider-1.jpg'), img('slider-2.jpg'), img('slider-4.webp'), img('slider-5.webp')],
+        tagline: 'Konveyör ve Kızaklı (Slider) Eğitim Setleri',
+        image: img('conv-4.webp'),
+        gallery: [img('conv-4.webp'), img('slider-5.webp'), img('slider-4.webp'), img('conv-3.jpg'), img('conv-2.jpg'), img('slider-2.jpg'), img('conv-1.jpg'), img('slider-1.jpg')],
         url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor',
-        description: 'Üniversite laboratuvarları ve mesleki teknik eğitim merkezleri için Endüstri 4.0 simülasyonu. Nesne tespiti, ayıklama (sorting) ve paletleme uygulamalarını doğrudan Python veya ROS üzerinden gerçekleştirin.',
+        description: 'uArm robot kollarıyla birlikte kullanılan konveyör ve kızaklı (slider) eğitim setleri; üniversite laboratuvarları ve mesleki teknik eğitim merkezlerinde küçük ölçekli bir üretim hattı kurarak nesne tespiti, ayıklama (sorting) ve paletleme uygulamalarını Python veya Blockly ile öğretmeyi sağlar. Not: uArm Swift Pro robot kol sete dahil değildir, ayrıca temin edilir.',
         specs: { 'Platform': 'uArm Uyumlu', 'Sensör Desteği': 'Renk / Boyut Ayrımı', 'Yazılım': 'Python / Blockly' },
         features: ['Laboratuvar Masası Ölçeği', 'Gerçek Zamanlı Görüntü İşleme Entegrasyonu', 'Endüstri 4.0 Simülasyonu', 'STEM / STEAM Uyumluluğu'],
         badge: 'AR-GE Eğitim',
@@ -982,13 +991,26 @@ const App = () => {
                       {product.badge}
                     </div>
                   )}
-                  {/* Ürün görseli (RobotSepeti ürün fotoğrafı) */}
-                  <ImageBlurUp
-                    src={product.image}
-                    alt={`${product.name} — Robotsepeti uFactory Türkiye`}
-                    className="absolute inset-0 w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${product.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500 z-10 pointer-events-none`}></div>
+                  {/* Ürün videosu varsa net şekilde (soluklaştırma olmadan), yoksa RobotSepeti ürün fotoğrafı */}
+                  {product.videoBg ? (
+                    <video
+                      preload="metadata"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      poster={product.image}
+                      aria-label={`${product.name} — Robotsepeti uFactory Türkiye`}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      src={product.videoBg}
+                    />
+                  ) : (
+                    <ImageBlurUp
+                      src={product.image}
+                      alt={`${product.name} — Robotsepeti uFactory Türkiye`}
+                      className="absolute inset-0 w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-700"
+                    />
+                  )}
                 </div>
 
                 <div className="tilt-card-inner p-8 flex-1 flex flex-col justify-between bg-white">
@@ -1071,8 +1093,7 @@ const App = () => {
                       )}
 
                       {/* Gradient overlays */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-200/80 via-transparent to-transparent z-10 pointer-events-none"></div>
-                      <div className={`absolute inset-0 bg-gradient-to-tr ${selectedProduct.color} opacity-5 mix-blend-screen pointer-events-none z-10`}></div>
+
                       
                       {/* Zoom hint badge */}
                       {!showVideo && (selectedProduct.gallery || selectedProduct.image) && (
@@ -1091,13 +1112,13 @@ const App = () => {
                       )}
 
                       {/* Product Name Overlay */}
-                      <div className="absolute bottom-0 left-0 right-0 z-20 p-6 sm:p-8">
+                      <div className="absolute bottom-4 left-4 z-20 px-5 py-4 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg max-w-[85%]">
                         {selectedProduct.badge && (
-                          <div className="inline-block mb-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold tracking-widest uppercase">
+                          <div className="inline-block mb-2 px-3 py-1 rounded-full bg-orange-500 text-white text-[10px] font-bold tracking-widest uppercase">
                             {selectedProduct.badge}
                           </div>
                         )}
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight drop-shadow-sm">
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 leading-tight">
                           {selectedProduct.name}
                         </h2>
                         <p className="text-orange-400 text-xs font-bold tracking-widest uppercase mt-1 drop-shadow-lg">
@@ -1369,9 +1390,9 @@ const App = () => {
                <Reveal variant="up" delay={1} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center"><Target size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Aivero: 3B Bin Picking</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Kutu İçi Parça Alma (3B Bin Picking)</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden olan düzensiz kutu içi parça alma işlemini, bulut tabanlı 3B vizyon ve makine öğrenimi ile xArm'a entegre ederek hücre maliyetini 10.000$ altına indirdiler.</p>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden biri olan düzensiz kutu içi parça alma işlemi; 3B görüntü işleme ve makine öğrenimi xArm'a entegre edilerek düşük maliyetli robot hücreleriyle otomatikleştirilebilir.</p>
                   <button type="button" onClick={() => openProductById('xarm', 'xarm6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
@@ -1379,9 +1400,9 @@ const App = () => {
                <Reveal variant="up" delay={2} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-full flex items-center justify-center"><Globe size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Extend Robotics: VR Tele-Operasyon</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">VR ile Uzaktan Operasyon</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Tehlikeli nükleer veya kimyasal alanlardaki görevleri insan zekasıyla çözmek için xArm sistemlerini Sanal Gerçeklik (VR) gözlükleriyle uzaktan, sezgisel bir insan kolu gibi yönettiler.</p>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Nükleer veya kimyasal gibi tehlikeli alanlardaki görevler, xArm sistemlerinin sanal gerçeklik (VR) gözlükleriyle uzaktan ve sezgisel biçimde, bir insan kolu gibi yönetilmesiyle personel riske atılmadan yapılabilir.</p>
                   <button type="button" onClick={() => openProductById('xarm', 'xarm7')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 7 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
@@ -1389,9 +1410,9 @@ const App = () => {
                <Reveal variant="up" delay={3} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-orange-500/20 text-orange-400 rounded-full flex items-center justify-center"><Briefcase size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Botlegger & VLT: Foodtech Otomasyonu</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Gıda ve Servis Otomasyonu</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Yüksek işçi devir hızına karşı kahve baristaları, dondurma otomatları ve hatta sıcak yağda falafel kızartma işlemleri için xArm ve Lite 6 ile otonom, standart hizmet sunan kiosklar yaratıldı.</p>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Kahve hazırlama, dondurma servisi ve kızartma gibi tekrarlayan işler; xArm ve Lite 6 ile kurulan otonom kiosklarla standart kalitede ve kesintisiz yürütülebilir.</p>
                   <button type="button" onClick={() => openProductById('xarm', 'xarm5')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 5 Lite Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
@@ -1399,9 +1420,9 @@ const App = () => {
                <Reveal variant="up" delay={4} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center"><Cpu size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">RoboHub Eindhoven: Mobil AMR</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Mobil Robotik (AMR)</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Eindhoven Teknoloji Üniversitesi ekibi, RoboCup@Work uluslararası yarışmasında Otonom Mobil Robot (AMR) üzerinde Lite 6'yı şasi olarak kullanarak entegre otonomi sağladı.</p>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Hafif ve kompakt Lite 6, otonom mobil robotların (AMR) üzerine monte edilerek üniversite araştırmalarında ve robotik yarışmalarında mobil manipülasyon için kullanılabilir.</p>
                   <button type="button" onClick={() => openProductById('lite', 'lite6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">Lite 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
             </div>
@@ -1507,7 +1528,7 @@ const App = () => {
                <ul className="grid sm:grid-cols-2 gap-4 text-sm text-slate-300 font-medium">
                   <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> TL, USD, EUR Kur Esnekliği</li>
                   <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Doğrudan Yerel Stok ve Yedek Parça</li>
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Seed Robotics & Unitree Multidisipliner Entegrasyon</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Çoklu Marka Robotik Entegrasyonu</li>
                   <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> B2B Mühendislik Desteği & Kurulum</li>
                </ul>
              </div>
@@ -1518,6 +1539,7 @@ const App = () => {
                   </a>
                 </Magnetic>
                 <a href="tel:+902126976212" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 12 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="mt-2 text-[#128C7E] font-bold flex items-center gap-2 hover:text-[#075E54]"><WhatsAppIcon size={20} /> WhatsApp: {WHATSAPP_DISPLAY}</a>
              </div>
           </div>
 
@@ -1548,7 +1570,7 @@ const App = () => {
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">İletişim</h4>
               <ul className="space-y-4">
                 <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976212" className="hover:text-orange-500">+90 212 697 62 12</a></li>
-                <li>WhatsApp: <a href="https://wa.me/905426976214" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">+90 542 697 62 14</a></li>
+                <li><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#128C7E] font-semibold hover:text-[#075E54]"><WhatsAppIcon size={18} /> WhatsApp: {WHATSAPP_DISPLAY}</a></li>
                 <li>Kurumsal teklif: <a href={gmailLink('uFactory Kurumsal Teklif Talebi', 'Merhaba,\n\nuFactory ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
                 <li>Teknik destek: <a href="mailto:destek@robotsepeti.com" className="hover:text-orange-500">destek@robotsepeti.com</a></li>
                 <li>Web: <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">www.robotsepeti.com</a></li>
