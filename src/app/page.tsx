@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import {
   Menu, X, ChevronRight, CheckCircle2,
-  Cpu, Code, Globe, Zap, Settings, Shield, Award,
-  ShoppingBag, Briefcase, Download, ArrowLeft, Play, Info,
+  Cpu, Code, Globe, Settings, Shield,
+  ShoppingBag, Briefcase, ArrowLeft, Play,
   Activity, Lock, Target, Server, Crosshair
 } from 'lucide-react';
 
@@ -21,12 +21,12 @@ const CountUp = ({ value, duration = 1400 }: { value: string; duration?: number 
     const node = ref.current;
     if (!node) return;
     const match = value.match(/^(\D*)(-?[\d.,±]+)(.*)$/);
-    if (!match) { setDisplay(value); return; }
+    if (!match) return;
     const prefix = match[1] ?? '';
     const raw = (match[2] ?? '').replace(/,/g, '.').replace(/±/g, '');
     const suffix = match[3] ?? '';
     const target = parseFloat(raw);
-    if (!isFinite(target)) { setDisplay(value); return; }
+    if (!isFinite(target)) return;
     const hasPlusMinus = match[2].includes('±');
     const decimals = (raw.split('.')[1] || '').length;
 
@@ -129,8 +129,16 @@ const TiltCard = ({
       onMouseMove={onMove}
       onMouseLeave={reset}
       onClick={onClick}
+      onKeyDown={onClick ? (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      } : undefined}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       style={style}
-      className={`tilt-card relative ${className}`}
+      className={`tilt-card relative focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 ${className}`}
     >
       {children}
       <span className="tilt-shine" />
@@ -451,10 +459,6 @@ const App = () => {
   };
   const handleHeroLeave = () => setCursor((c) => ({ ...c, visible: false }));
 
-  useEffect(() => {
-    setHeroVideoSrc(HERO_VIDEOS[Math.floor(Math.random() * HERO_VIDEOS.length)]);
-  }, []);
-
   const handleVideoEnded = () => {
     const currentIndex = HERO_VIDEOS.indexOf(heroVideoSrc);
     const nextIndex = (currentIndex + 1) % HERO_VIDEOS.length;
@@ -708,8 +712,7 @@ const App = () => {
         specs: { 'Kuvvet Aralığı': '150N - 200N', 'Tork Aralığı': '4Nm', 'Çözünürlük': '100mN / 5mNm' },
         color: 'from-slate-700 to-slate-900',
         variants: [
-          { name: 'Sensör', desc: 'xArm uyumlu kuvvet/tork sensörü', url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu' },
-          { name: 'xArm 6 + Sensör', desc: 'xArm 6 ile birlikte', url: RS + 'xarm-6-kolaboratif-robot-6-eksen-kuvvet-tork-sensoru' }
+          { name: 'Sensör', desc: 'xArm uyumlu kuvvet/tork sensörü', url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu' }
         ]
       },
       {
@@ -745,7 +748,7 @@ const App = () => {
         color: 'from-indigo-600 to-blue-800',
         variants: [
           { name: 'Konveyör Kiti', desc: 'Conveyor eğitim kiti', url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor' },
-          { name: 'Slider + Konveyör', desc: 'Slider conveyor eğitim kiti', url: RS + 'uarm-egitim-kiti-slider-conveyor' }
+          { name: 'Slider Kiti', desc: 'Robotik kızak eğitim kiti', url: RS + 'uarm-egitim-kiti-slider-conveyor' }
         ]
       },
       {
@@ -883,8 +886,8 @@ const App = () => {
 
           {/* Top Row: Distributor Info (Top Left) */}
           <div className="flex justify-between items-start w-full">
-            <div className="bg-white/80 backdrop-blur-md px-5 py-3 rounded-2xl shadow-lg border border-white/60 pointer-events-auto transform hover:scale-105 transition-transform duration-300">
-              <h2 className="text-sm md:text-base font-bold text-slate-900 tracking-wide flex items-center gap-2">
+            <div className="max-w-full bg-white/80 backdrop-blur-md px-4 sm:px-5 py-3 rounded-2xl shadow-lg border border-white/60 pointer-events-auto transition-transform duration-300 hover:scale-[1.02]">
+              <h2 className="text-xs sm:text-sm md:text-base font-bold text-slate-900 tracking-wide flex flex-col items-start sm:flex-row sm:items-center gap-1 sm:gap-2">
                 <span className="typewriter">uFactory Türkiye Yetkili Distribütörü</span>
                 <span className="text-white bg-orange-600 px-2 py-0.5 rounded text-xs font-black tracking-widest shadow-sm animate-fade-up" style={{ animationDelay: '2.5s' }}>ROBOTSEPETİ</span>
               </h2>
@@ -1036,6 +1039,7 @@ const App = () => {
                 {/* Back Button */}
                 <button 
                   onClick={handleBackToGrid}
+                  aria-label="Tüm ürünlere dön"
                   className="absolute top-6 left-6 z-30 w-12 h-12 bg-white/80 backdrop-blur-xl rounded-full flex items-center justify-center text-slate-900 hover:text-white hover:bg-orange-500 transition-all duration-300 border border-slate-200 shadow-lg hover:shadow-orange-500/30 hover:scale-110"
                 >
                   <ArrowLeft size={22} />
@@ -1321,7 +1325,7 @@ const App = () => {
                   <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center flex-shrink-0"><Code size={28}/></div>
                   <div>
                     <h4 className="text-xl font-bold text-slate-900 mb-2">Python & C++ SDK, 250Hz Veri Akışı</h4>
-                    <p className="text-slate-600 leading-relaxed">Studio içindeki entegre Python IDE'si ile görsel projeleri koda dönüştürün. <code>servo_cartesian</code> modları sayesinde dış kameralardan gelen anlık sapmalara milisaniyeler içinde reaksiyon gösterin.</p>
+                    <p className="text-slate-600 leading-relaxed">Studio içindeki entegre Python IDE&apos;si ile görsel projeleri koda dönüştürün. <code>servo_cartesian</code> modları sayesinde dış kameralardan gelen anlık sapmalara milisaniyeler içinde reaksiyon gösterin.</p>
                   </div>
                 </Reveal>
 
@@ -1356,7 +1360,7 @@ const App = () => {
                     <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0"><Lock size={32}/></div>
                     <div>
                       <h4 className="font-bold text-slate-900 mb-2">Kategori 1 ve Kategori 2 Duruşları</h4>
-                      <p className="text-sm text-slate-600"><strong>Stop Cat 1:</strong> Acil durdurma butonunda yörüngeden sapmadan 300ms içinde frenleri kilitler.<br/><strong>Stop Cat 2 (Stand-by):</strong> Lazer bariyer ihlalinde gücü açık tutarak durur, "Safeguard Reset" ile işe anında devam eder.</p>
+                      <p className="text-sm text-slate-600"><strong>Stop Cat 1:</strong> Acil durdurma butonunda yörüngeden sapmadan 300ms içinde frenleri kilitler.<br/><strong>Stop Cat 2 (Stand-by):</strong> Lazer bariyer ihlalinde gücü açık tutarak durur, &quot;Safeguard Reset&quot; ile işe anında devam eder.</p>
                     </div>
                  </Reveal>
               </div>
@@ -1392,7 +1396,7 @@ const App = () => {
                     <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center"><Target size={24}/></div>
                     <h3 className="text-2xl font-bold text-slate-900">Kutu İçi Parça Alma (3B Bin Picking)</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden biri olan düzensiz kutu içi parça alma işlemi; 3B görüntü işleme ve makine öğrenimi xArm'a entegre edilerek düşük maliyetli robot hücreleriyle otomatikleştirilebilir.</p>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden biri olan düzensiz kutu içi parça alma işlemi; 3B görüntü işleme ve makine öğrenimi xArm&apos;a entegre edilerek düşük maliyetli robot hücreleriyle otomatikleştirilebilir.</p>
                   <button type="button" onClick={() => openProductById('xarm', 'xarm6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
@@ -1436,7 +1440,7 @@ const App = () => {
              <Reveal as="h4" variant="up" className="text-orange-500 font-bold tracking-widest uppercase text-sm mb-4">Masaüstü Robotikten Sanayi Devrimine</Reveal>
              <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">UFactory & Robotsepeti Tarihçesi</Reveal>
              <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-600 max-w-2xl mx-auto">
-                2013'ten bugüne, açık kaynaklı otomasyonu herkes için erişilebilir kılan inovasyon yolculuğumuz.
+                2013&apos;ten bugüne, açık kaynaklı otomasyonu herkes için erişilebilir kılan inovasyon yolculuğumuz.
              </Reveal>
           </div>
 
@@ -1460,7 +1464,7 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <Reveal as="h2" variant="up" className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">
-              Robotsepeti'nden uFactory Satın Almanın Avantajları
+              Robotsepeti&apos;nden uFactory Satın Almanın Avantajları
             </Reveal>
             <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-400 max-w-3xl mx-auto">
               Türkiye tek yetkili distribütörü olarak uçtan uca endüstriyel otomasyon çözümleri sunuyoruz.
@@ -1521,9 +1525,9 @@ const App = () => {
           
           <div className="bg-gradient-to-r from-white to-slate-100 rounded-3xl p-10 lg:p-16 mb-16 flex flex-col lg:flex-row items-center justify-between border border-slate-200 shadow-xl shadow-slate-200/50">
              <div className="lg:w-2/3 mb-8 lg:mb-0">
-               <h3 className="text-3xl font-black text-slate-900 mb-4">Türkiye'nin Tek Yetkili Çözüm Ortağı</h3>
+               <h3 className="text-3xl font-black text-slate-900 mb-4">Türkiye&apos;nin Tek Yetkili Çözüm Ortağı</h3>
                <p className="text-slate-400 leading-relaxed mb-6">
-                 Robot Sepeti (Robotsepeti Teknoloji A.Ş.), e-ticaretin ötesinde; endüstriyel Ar-Ge, Teknokent girişimleri ve Türk KOBİ'leri için stratejik entegratördür.
+                  Robot Sepeti (Robotsepeti Teknoloji A.Ş.), e-ticaretin ötesinde; endüstriyel Ar-Ge, Teknokent girişimleri ve Türk KOBİ&apos;leri için stratejik entegratördür.
                </p>
                <ul className="grid sm:grid-cols-2 gap-4 text-sm text-slate-300 font-medium">
                   <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> TL, USD, EUR Kur Esnekliği</li>
@@ -1538,7 +1542,7 @@ const App = () => {
                     Distribütörle İletişime Geç
                   </a>
                 </Magnetic>
-                <a href="tel:+902126976212" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 12 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
+                <a href="tel:+902126976214" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 14 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
                 <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="mt-2 text-[#128C7E] font-bold flex items-center gap-2 hover:text-[#075E54]"><WhatsAppIcon size={20} /> WhatsApp: {WHATSAPP_DISPLAY}</a>
              </div>
           </div>
@@ -1569,7 +1573,7 @@ const App = () => {
             <div>
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">İletişim</h4>
               <ul className="space-y-4">
-                <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976212" className="hover:text-orange-500">+90 212 697 62 12</a></li>
+                <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976214" className="hover:text-orange-500">+90 212 697 62 14</a></li>
                 <li><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#128C7E] font-semibold hover:text-[#075E54]"><WhatsAppIcon size={18} /> WhatsApp: {WHATSAPP_DISPLAY}</a></li>
                 <li>Kurumsal teklif: <a href={gmailLink('uFactory Kurumsal Teklif Talebi', 'Merhaba,\n\nuFactory ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
                 <li>Teknik destek: <a href="mailto:destek@robotsepeti.com" className="hover:text-orange-500">destek@robotsepeti.com</a></li>
@@ -1589,7 +1593,7 @@ const App = () => {
             <div>
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Yetkili Distribütör Güvencesi</h4>
               <p className="leading-relaxed mb-4 text-slate-500">
-                uFactory ürünleri dünya genelinde 80'den fazla ülkede aktif üretim ve AR-GE sistemlerinde çalışmaktadır. Robotsepeti, bu kalitenin Türkiye'deki tek resmi ve yetkili distribütörüdür. Tüm ürünler yerel garanti ve mühendislik desteği altındadır.
+                uFactory ürünleri dünya genelinde 80&apos;den fazla ülkede aktif üretim ve AR-GE sistemlerinde çalışmaktadır. Robotsepeti, bu kalitenin Türkiye&apos;deki tek resmi ve yetkili distribütörüdür. Tüm ürünler yerel garanti ve mühendislik desteği altındadır.
               </p>
             </div>
           </div>
@@ -1599,6 +1603,15 @@ const App = () => {
           </div>
         </div>
       </footer>
+      <button
+        type="button"
+        aria-label="Sayfanın başına dön"
+        title="Yukarı dön"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[80] grid h-10 w-10 place-items-center rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-600/25 transition-transform hover:-translate-y-1 hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+      >
+        <span aria-hidden="true" className="text-2xl leading-none">↑</span>
+      </button>
 
     </div>
   );

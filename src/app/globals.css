@@ -343,6 +343,9 @@ html {
              caret 800ms steps(1) 2.7s 4 both;
   max-width: 0;
 }
+@media (max-width: 639px) {
+  .typewriter { max-width: 100%; white-space: normal; animation: none; border-right: 0; }
+}
 
 @keyframes typing {
   from { max-width: 0; }
