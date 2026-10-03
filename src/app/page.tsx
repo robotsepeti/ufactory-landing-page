@@ -779,11 +779,11 @@ const App = () => {
       <nav className="fixed w-full bg-white/90 backdrop-blur-xl z-50 border-b border-slate-200 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-24 items-center">
-            <div className="flex-shrink-0 flex items-center gap-3 group cursor-pointer" onClick={() => window.scrollTo(0,0)}>
+            <div className="flex-shrink-0 flex items-center gap-3 group">
               {/* Robot Sepeti Logo */}
-              <div className="flex items-center">
+              <a href="https://www.robotsepeti.com/" target="_blank" rel="noopener noreferrer" aria-label="RobotSepeti mağazasına git" className="flex items-center">
                 <img src="/images/robotsepeti_logo_cropped.png" alt="Robotsepeti - uFactory Türkiye Yetkili Distribütörü" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
-              </div>
+              </a>
               {/* Divider */}
               <div className="h-8 w-px bg-slate-300"></div>
               {/* UFACTORY Logo */}
@@ -1550,9 +1550,9 @@ const App = () => {
           <div className="flex flex-col md:flex-row justify-between items-center border-b border-slate-300 pb-12 mb-12">
             <div className="flex items-center gap-6 mb-6 md:mb-0">
               {/* Robot Sepeti Logo - Footer */}
-              <div className="flex items-center">
+              <a href="https://www.robotsepeti.com/" target="_blank" rel="noopener noreferrer" aria-label="RobotSepeti mağazasına git" className="flex items-center">
                 <img src="/images/robotsepeti_logo_cropped.png" alt="Robotsepeti - uFactory Türkiye Yetkili Distribütörü" className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
-              </div>
+              </a>
               {/* Divider */}
               <div className="h-10 w-px bg-slate-300"></div>
               {/* UFACTORY Logo - Footer */}
