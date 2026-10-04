@@ -22,6 +22,14 @@
 
 Kuvvet/tork sensöründeki çelişkili xArm 6/7 paket bağlantısı çıkarılmış durumda; yeniden eklenmedi.
 
+## Ek mobil denetim — 4 Ekim 2026
+
+- 13 ürünün tamamı 320 px küçük telefon ve 768 px tablet genişliklerinde yeniden denetlendi. 360, 390, 414, 844 ve 1024 px genişliklerde temsilci ürünler; 844 × 390 yatay telefon görünümü ayrıca kontrol edildi.
+- Telefon menüsü, dört kategori, ürün seçimi/katalog dönüşü, galeri ve özellik alanlarında yatay taşma veya kırık medya bulunmadı.
+- Avantaj bölümündeki uzun başlık 320/360 px ekranlarda taşmayacak boyuta getirildi; gerektiğinde sözcük sarma eklendi.
+- Ürün ailelerinin görünme animasyonu yalnızca opaklık, hareket ve gölgeyi etkiler. Ekran yönü değişirken kart genişliği/iç boşlukları doğrudan yeni yerleşime geçer; dar geçici kutular oluşmaz.
+- Testler Chromium ekran boyutu emülasyonu ile yürütüldü; fiziksel Safari/Firefox cihaz testi yapılmadı.
+
 ## Bağımlılıklar
 
 Next.js ve eslint-config-next 16.3.8'e yükseltildi; güvenli aralıkta kalan geçişli güncellemeler uygulandı. Üretim bağımlılıkları: `npm audit --omit=dev` — **0 açık**.

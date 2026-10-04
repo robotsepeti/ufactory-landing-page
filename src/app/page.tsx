@@ -320,12 +320,12 @@ const TimelineItem = ({ data, index }: { data: typeof TIMELINE_DATA[0], index: n
       <div className={`hidden md:block w-5/12 ${isEven ? 'md:order-3' : 'md:order-1'}`}></div>
       
       {/* Center Node */}
-      <div className={`z-20 flex items-center justify-center order-1 md:order-2 w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-white bg-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-all duration-700 mb-4 md:mb-0 shrink-0 ${isVisible ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
+      <div className={`z-20 flex items-center justify-center order-1 md:order-2 w-10 h-10 md:w-16 md:h-16 rounded-full border-4 border-white bg-orange-600 shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-[opacity,transform,box-shadow] duration-700 mb-4 md:mb-0 shrink-0 ${isVisible ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
         <div className={`w-3 h-3 md:w-6 md:h-6 rounded-full bg-white transition-transform duration-1000 delay-300 ${isVisible ? 'scale-100' : 'scale-0'}`}></div>
       </div>
       
       {/* Content Box */}
-      <div className={`order-2 ${isEven ? 'md:order-1 text-right' : 'md:order-3 text-left'} w-[calc(100%-3.5rem)] ml-14 md:w-5/12 md:ml-0 bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-2xl shadow-slate-200/50 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-x-0 translate-y-0' : 'opacity-0 translate-y-12 ' + (isEven ? 'md:-translate-x-16' : 'translate-x-0 md:translate-x-16')}`}>
+      <div className={`order-2 ${isEven ? 'md:order-1 text-right' : 'md:order-3 text-left'} w-[calc(100%-3.5rem)] ml-14 md:w-5/12 md:ml-0 bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-2xl shadow-slate-200/50 transition-[opacity,transform,box-shadow] duration-1000 transform ${isVisible ? 'opacity-100 translate-x-0 translate-y-0' : 'opacity-0 translate-y-12 ' + (isEven ? 'md:-translate-x-16' : 'translate-x-0 md:translate-x-16')}`}>
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-red-600 rounded-t-3xl opacity-50"></div>
         <h3 className="font-black text-orange-500 text-3xl md:text-5xl mb-2 tracking-tight">{data.year}</h3>
         <h4 className="font-bold text-slate-900 text-xl md:text-2xl mb-3">{data.title}</h4>
@@ -1533,7 +1533,7 @@ const App = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <Reveal as="h2" variant="up" className="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">
+            <Reveal as="h2" variant="up" className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight break-words">
               Robotsepeti&apos;nden uFactory Satın Almanın Avantajları
             </Reveal>
             <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-400 max-w-3xl mx-auto">
