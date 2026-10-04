@@ -483,7 +483,7 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'uarm', Product[]> = {
       image: img('g2-1.jpg'),
       gallery: [img('g2-1.jpg'), img('g2-2.jpg')],
       url: RS + 'ufactory-xarm-gripper-g2-elektrikli-paralel-robot-tutucu',
-      description: 'xArm Gripper G2, endüstriyel otomasyon uygulamalarında 5 kg taşıma kapasitesi ve 50 N azami kavrama kuvveti sunar. Dâhilî 12 bitlik mutlak enkoder, hız, kuvvet ve konum kontrolünü destekler. Pogo pin arayüzü, harici bağlantı kablosu ihtiyacını azaltır. Değiştirilebilir parmak uçlarıyla farklı parça geometrilerine uyarlanabilir.',
+      description: 'xArm Gripper G2, endüstriyel otomasyon uygulamalarında 5 kg taşıma kapasitesi ve 50 N azami kavrama kuvveti sunar. Dâhilî 12 bitlik mutlak enkoder, hız, kuvvet ve konum kontrolünü destekler. Pogo pin arayüzü, haricî bağlantı kablosu ihtiyacını azaltır. Değiştirilebilir parmak uçlarıyla farklı parça geometrilerine uyarlanabilir.',
       specs: { 'Strok mesafesi': '84 ± 1 mm', 'Kavrama kuvveti': '10–50 N', 'Kapanma hızı': '15–225 mm/s' },
       features: ['12 bitlik mutlak enkoder', 'Programlanabilir hız, kuvvet ve konum', 'Pogo pin arayüzüyle bağlantı', '2 milyondan fazla çalışma çevrimi'],
       color: 'from-gray-600 to-gray-800'
@@ -508,7 +508,7 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'uarm', Product[]> = {
       image: img('vac-1.jpg'),
       gallery: [img('vac-1.jpg'), img('vac-2.jpg'), img('vac-3.jpg'), img('vac-4.jpg')],
       url: RS + 'ufactory-xarm-vacuum-gripper',
-      description: 'Elektrikli vakum jeneratörü, harici kompresör ihtiyacını ortadan kaldırır. −55 kPa vakum seviyesi ve 5 kg taşıma kapasitesiyle düz yüzeyli metal parçaları veya karton kutuları kavramak için kullanılabilir.',
+      description: 'Elektrikli vakum jeneratörü, haricî kompresör ihtiyacını ortadan kaldırır. −55 kPa vakum seviyesi ve 5 kg taşıma kapasitesiyle düz yüzeyli metal parçaları veya karton kutuları kavramak için kullanılabilir.',
       specs: { 'Vakum seviyesi': '−55 kPa (%78)', 'Hava akışı': '4 L/dakika', 'Kapasite': '5 kg' },
       color: 'from-gray-600 to-gray-800'
     },
@@ -1440,7 +1440,7 @@ const App = () => {
                  <Reveal variant="up" delay={3} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 sm:col-span-2 flex flex-col sm:flex-row gap-6 items-center card-lift">
                     <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0"><Lock size={32}/></div>
                     <div>
-                      <h4 className="font-bold text-slate-900 mb-2">Durdurma ve harici girişler</h4>
+                      <h4 className="font-bold text-slate-900 mb-2">Durdurma ve haricî girişler</h4>
                       <p className="text-sm text-slate-600">Kontrolcüdeki acil durdurma ve yapılandırılabilir Stop Moving girişleri hareketi durdurur. Safeguard Reset, koruyucu duruş sonrasında hareketin yeniden etkinleştirilmesini sağlar; giriş işlevleri Studio üzerinden ayarlanır.</p>
                     </div>
                  </Reveal>
