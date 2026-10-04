@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "uFactory Robot Kolu Türkiye | Robotsepeti Yetkili Distribütör",
-  description: "Türkiye'nin uFactory yetkili distribütörü Robotsepeti ile xArm, Lite6 ve Lite6 Pro robot kollarını inceleyin. Teknik destek ve hızlı teslimat.",
+  description: "Türkiye'nin uFactory yetkili distribütörü RobotSepeti ile xArm, 850, Lite 6 robot kollarını ve aksesuarlarını inceleyin. Teknik özellikler, model seçenekleri ve kurumsal teklif.",
   metadataBase: new URL("https://ufactory.robotsepeti.com"),
   alternates: {
     canonical: "/",
@@ -86,7 +86,7 @@ const jsonLdSchema = {
           "name": "uFactory ürünlerinde teslimat süreleri nedir?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Popüler xArm ve Lite6 modellerinin stok durumuna göre teslimatlarımız doğrudan Türkiye depomuzdan veya hızlı tedarik zincirimiz üzerinden 2-4 hafta içerisinde gerçekleşmektedir."
+            "text": "Teslim süresi seçilen model, kontrol kutusu, aksesuarlar ve güncel stok durumuna göre değişir. Ürün sayfasındaki stok bilgisini inceleyebilir veya RobotSepeti ekibinden siparişe özel teslim süresi alabilirsiniz."
           }
         }
       ]

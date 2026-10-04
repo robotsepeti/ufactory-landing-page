@@ -27,6 +27,16 @@ body {
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+[hidden] { display: none !important; }
+.product-spec-grid > div { min-width: 0; }
+.product-spec-grid p { overflow-wrap: anywhere; }
+.product-spec-label { line-height: 1.5; }
+:where(a, button, [role="button"]):focus-visible {
+  outline: 2px solid #c2410c;
+  outline-offset: 4px;
 }
 
 /* ============================================
@@ -486,6 +496,7 @@ html {
 
 /* Respect users who prefer less motion */
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .reveal,
   .reveal-up,
   .reveal-down,
