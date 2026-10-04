@@ -34,7 +34,9 @@ Kuvvet/tork sensöründeki çelişkili xArm 6/7 paket bağlantısı çıkarılm�
 
 Next.js ve eslint-config-next 16.3.8'e yükseltildi; güvenli aralıkta kalan geçişli güncellemeler uygulandı. Üretim bağımlılıkları: `npm audit --omit=dev` — **0 açık**.
 
-Tam `npm audit` çıktısında `braces@3.0.3` → micromatch → fast-glob → Next ESLint araçları zincirinde **5 ilişkili yüksek önem uyarısı** kalıyor. Kontrol tarihinde npm'de yamalı bir braces sürümü bulunmadı. Bunlar geliştirme araçlarıdır; yayımlanan uygulamanın üretim bağımlılıklarında yoktur. Zorla önerilen eski/uyumsuz ESLint sürümüne geçilmedi. [Braces duyurusu](https://github.com/advisories/GHSA-vcvr-r3jv-pc5j).
+Tam `npm audit` çıktısında `braces@3.0.3` → micromatch → fast-glob → Next ESLint araçları zincirinde **5 ilişkili yüksek önem uyarısı** kalıyor. 4 Ekim 2026'daki son kontrolde npm kayıt defterinin güncel kararlı sürümleri `braces@3.0.3` ve `eslint-config-next@16.3.8`; [ilgili güvenlik duyurusunda](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) yamalı sürüm henüz bulunmuyor. Üretim bağımlılıkları ayrıca yeniden denetlendi: **0 açık**. Zorla önerilen eski/uyumsuz ESLint sürümüne geçilmedi.
+
+Kaynak kod incelemesinde Next ESLint'in `fast-glob` kullanımı, geliştiricinin `settings.next.rootDir` ayarını çözümleyen yardımcıda bulunuyor. Bu projede o ayar yok; ziyaretçi verisi bu araca aktarılmıyor. Uyarı geliştirme bağımlılıklarında kayıtlı kalıyor. Kararlı bir üretici yaması çıktığında bağımlılık güncellemesi ve lint/derleme kontrolü gerekir.
 
 ## Tekrar doğrulama
 
