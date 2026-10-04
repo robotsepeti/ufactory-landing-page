@@ -10,7 +10,7 @@ import {
 
 /* ============================================
    CountUp: animates a number from 0 → target
-   Pulls the leading number out of strings like "5.0 kg" or "±0.02 mm"
+   Pulls the leading number out of Turkish values like "5,0 kg" or "±0,02 mm"
    ============================================ */
 const CountUp = ({ value, duration = 1400 }: { value: string; duration?: number }) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -24,7 +24,8 @@ const CountUp = ({ value, duration = 1400 }: { value: string; duration?: number 
     const match = value.match(/^(\D*)(-?[\d.,±]+)(.*)$/);
     if (!match) return;
     const prefix = match[1] ?? '';
-    const raw = (match[2] ?? '').replace(/,/g, '.').replace(/±/g, '');
+    const numberText = (match[2] ?? '').replace(/±/g, '');
+    const raw = numberText.replace(/\./g, '').replace(',', '.');
     const suffix = match[3] ?? '';
     const target = parseFloat(raw);
     if (!isFinite(target)) return;
@@ -39,7 +40,8 @@ const CountUp = ({ value, duration = 1400 }: { value: string; duration?: number 
         const t = Math.min(1, (now - start) / duration);
         const eased = 1 - Math.pow(1 - t, 3);
         const current = target * eased;
-        const text = `${prefix}${hasPlusMinus ? '±' : ''}${current.toFixed(decimals)}${suffix}`;
+        const formatted = current.toLocaleString('tr-TR', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        const text = `${prefix}${hasPlusMinus ? '±' : ''}${formatted}${suffix}`;
         setDisplay(text);
         if (t < 1) requestAnimationFrame(tick);
         else setDisplay(value);
@@ -270,24 +272,24 @@ const gmailLink = (subject: string, body: string) =>
 const quoteMailLink = (product: Product, variantIndex: number) => {
   const variant = product.variants?.[variantIndex];
   const model = variant ? `${variant.name} (${variant.desc})` : '-';
-  const subject = `Teklif Talebi: ${product.name}${variant ? ' - ' + variant.name : ''}`;
+  const subject = `Teklif talebi: ${product.name}${variant ? ' — ' + variant.name : ''}`;
   const body =
     'Merhaba,\n\n' +
     'Aşağıdaki ürün için fiyat teklifi almak istiyorum.\n\n' +
     `Ürün: ${product.name}\n` +
     `Model: ${model}\n` +
     (variant?.url || product.url ? `Ürün bağlantısı: ${variant?.url || product.url}\n` : '') +
-    '\nAdet:\nFirma adı:\nAd Soyad:\nTelefon:\n\nTeşekkürler.';
+    '\nAdet:\nFirma adı:\nAd soyad:\nTelefon:\n\nTeşekkürler.';
   return gmailLink(subject, body);
 };
 
 const HERO_VIDEOS = ['/videos/xarm.mp4', '/videos/lite6.mp4', '/videos/850_small.mp4'];
 
 const TIMELINE_DATA = [
-  { year: 'uArm', title: 'Konveyör ve Kızak Sistemleri', desc: 'Konveyör, nesneleri robotun önüne taşıyan bant sistemidir. Slider ise robot koluna yatay hareket sağlayan kızaktır. İki sistem ayrı ürünlerdir; uArm robot kolu ürünlere dahil değildir.' },
-  { year: 'xArm', title: '5, 6 ve 7 Eksenli Robot Kolları', desc: 'xArm 5 Lite, xArm 6 ve xArm 7; sırasıyla 3 kg, 5 kg ve 3,5 kg taşıma kapasitesi sunar. Eklem sayısı ve çalışma alanı, uygulamanın hareket gereksinimlerine göre seçilir.' },
-  { year: 'Lite 6', title: 'Kompakt Altı Eksenli Robot Kolu', desc: '600 g taşıma kapasitesi ve 440 mm erişimiyle masaüstü montaj, eğitim ve araştırma görevleri için kullanılabilir. Elektrikli Gripper Lite ve Vacuum Lite aksesuarlarıyla desteklenir.' },
-  { year: '850', title: '850 mm Erişim ve 5 kg Taşıma', desc: 'UFACTORY 850, daha uzun erişim gereken montaj ve parça taşıma uygulamaları için altı eksenli bir seçenektir. Kontrolcü, uç işleyici ve bağlantı seçenekleri sipariş kapsamına göre belirlenir.' },
+  { year: 'uArm', title: 'Konveyör ve kızak sistemleri', desc: 'Konveyör, nesneleri robotun önüne taşıyan bant sistemidir. Slider ise robot koluna yatay hareket sağlayan kızaktır. İki sistem ayrı ürünlerdir; uArm robot kolu ürünlere dâhil değildir.' },
+  { year: 'xArm', title: '5, 6 ve 7 eksenli robot kolları', desc: 'xArm 5 Lite, xArm 6 ve xArm 7 sırasıyla 3 kg, 5 kg ve 3,5 kg taşıma kapasitesi sunar. Eklem sayısı ve çalışma alanı, uygulamanın hareket gereksinimlerine göre seçilir.' },
+  { year: 'Lite6', title: 'Kompakt altı eksenli robot kolu', desc: '600 g taşıma kapasitesi ve 440 mm erişimiyle masaüstü montaj, eğitim ve araştırma görevleri için kullanılabilir. Elektrikli Gripper Lite ve Vacuum Lite aksesuarlarıyla desteklenir.' },
+  { year: '850', title: '850 mm erişim ve 5 kg taşıma kapasitesi', desc: 'UFACTORY 850, daha uzun erişim gereken montaj ve parça taşıma uygulamaları için altı eksenli bir seçenektir. Kontrolcü, uç işleyici ve bağlantı seçenekleri sipariş kapsamına göre belirlenir.' },
 ];
 
 const TimelineItem = ({ data, index }: { data: typeof TIMELINE_DATA[0], index: number }) => {
@@ -343,197 +345,197 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'uarm', Product[]> = {
   xarm: [
     {
       id: 'xarm7',
-      name: 'uFactory xArm 7',
-      tagline: '7 Eksenli Kinematik Artıklık',
+      name: 'UFACTORY xArm 7',
+      tagline: '7 eksenli kinematik artıklık',
       image: img('xarm7-1.webp'),
       gallery: [img('xarm7-1.webp'), img('xarm7-2.jpg'), img('xarm7-3.jpg'), img('xarm7-4.png')],
       videoBg: '/videos/xarm7_yt.mp4',
       url: RS + 'xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof',
-      description: 'Endüstriyel robot kolu uygulamalarında esnek hareket imkanı sağlayan 7 eksenli kinematik yapı. Dar alanlarda engellerden kaçınma yeteneği ve karbon fiber gövdesiyle 13.7 kg ağırlığında yüksek performanslı cobot.',
+      description: 'xArm 7, endüstriyel uygulamalarda esnek hareket sağlayan 7 eksenli bir robot koludur. Kinematik yedekliliği, dar alanlarda engellerden kaçınmayı destekler. Karbon fiber gövdesiyle 13,7 kg ağırlığındadır.',
       specs: {
-        'Taşıma Kapasitesi': '3.5 kg',
-        'Erişim (Reach)': '700 mm',
-        'Tekrarlanabilirlik': '±0.1 mm',
-        'DoF': '7 Eksen',
-        'Maks. Hız': '1 m/s',
-        'Gövde Ağırlığı': '13.7 kg'
+        'Taşıma kapasitesi': '3,5 kg',
+        'Erişim': '700 mm',
+        'Tekrarlanabilirlik': '±0,1 mm',
+        'DoF': '7 eksen',
+        'Azami hız': '1 m/s',
+        'Gövde ağırlığı': '13,7 kg'
       },
-      features: ['Kinematik Yedeklilik', 'Dar Alan & Engelden Kaçınma', '1,3,5,6,7. Eksenlerde ±360° Dönüş', 'ISO Class 5 Temiz Oda Onayı'],
-      badge: 'Araştırma & VR',
+      features: ['Kinematik yedeklilik', 'Dar alanlarda engelden kaçınma', '1, 3, 5, 6 ve 7. eksenlerde ±360° dönüş', 'ISO Class 5 temiz oda onayı'],
+      badge: 'Araştırma ve VR',
       color: 'from-purple-600 to-pink-600',
       variants: [
-        { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof' },
-        { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-b' },
-        { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-c' },
-        { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-d' },
-        { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-kol-35kg-700mm-7-dof-ver-e' }
+        { name: 'Model A', desc: 'AC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-7-kolaboratif-robot-cobot-isbirlikci-robot-kol-6kg-700mm-7dof' },
+        { name: 'Model B', desc: 'DC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-b' },
+        { name: 'Model C', desc: 'AC kontrol kutusu + 3 m kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-c' },
+        { name: 'Model D', desc: 'AC kontrol kutusu + 15 m kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-6kg-700mm-7dof-ver-d' },
+        { name: 'Model E', desc: 'DC kontrol kutusu + 3 m kablo', url: RS + 'xarm-7-kolaboratif-cobot-isbirlikci-robot-kol-35kg-700mm-7-dof-ver-e' }
       ]
     },
     {
       id: 'xarm6',
-      name: 'uFactory xArm 6',
-      tagline: 'Endüstriyel Üretim Standardı',
+      name: 'UFACTORY xArm 6',
+      tagline: 'Endüstriyel üretim standardı',
       image: img('xarm6-1.jpg'),
       gallery: [img('xarm6-1.jpg'), img('xarm6-2.jpg'), img('xarm6-3.jpg'), img('xarm6-4.png'), img('xarm6-5.jpg')],
       videoBg: '/videos/xarm.mp4',
       url: RS + 'xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof',
-      description: 'Endüstriyel üretim hatları, pick and place, montaj ve CNC tezgah yükleme işlemleri için tasarlanmış 5 kg payload kapasiteli 6 eksenli cobot. Ağır kütleli ürünlerin kavranmasında stabil ve güvenilirdir.',
+      description: 'xArm 6, üretim hatlarında parça alma ve yerleştirme, montaj ve CNC tezgâh yükleme işlemleri için tasarlanmış 6 eksenli bir robot koludur. 5 kg taşıma kapasitesiyle parça taşıma ve kavrama uygulamalarında kullanılabilir.',
       specs: {
-        'Taşıma Kapasitesi': '5.0 kg',
-        'Erişim (Reach)': '700 mm',
-        'Tekrarlanabilirlik': '±0.1 mm',
-        'DoF': '6 Eksen',
-        'Maks. Hız': '1 m/s',
-        'Gövde Ağırlığı': '12.2 kg'
+        'Taşıma kapasitesi': '5,0 kg',
+        'Erişim': '700 mm',
+        'Tekrarlanabilirlik': '±0,1 mm',
+        'DoF': '6 eksen',
+        'Azami hız': '1 m/s',
+        'Gövde ağırlığı': '12,2 kg'
       },
-      features: ['3B Uzayda Tam Yönlendirme', 'Ağır Yük Taşıma Dengesi', '126mm Kompakt Ayak İzi', 'AC / DC Kontrol Kutusu'],
-      badge: 'En Popüler',
+      features: ['3B uzayda tam yönlendirme', 'Ağır yük taşıma dengesi', '126 mm kompakt taban alanı', 'AC/DC kontrol kutusu'],
+      badge: 'En popüler',
       color: 'from-blue-600 to-cyan-600',
       variants: [
-        { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof' },
-        { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-b' },
-        { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-c' },
-        { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-d' },
-        { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-kol-5kg-700mm-6-dof-ver-e' }
+        { name: 'Model A', desc: 'AC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-5kg-700mm-6dof' },
+        { name: 'Model B', desc: 'DC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-b' },
+        { name: 'Model C', desc: 'AC kontrol kutusu + 3 m kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-c' },
+        { name: 'Model D', desc: 'AC kontrol kutusu + 15 m kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-5kg-700mm-6dof-ver-d' },
+        { name: 'Model E', desc: 'DC kontrol kutusu + 3 m kablo', url: RS + 'xarm-6-kolaboratif-cobot-isbirlikci-robot-kol-5kg-700mm-6-dof-ver-e' }
       ]
     },
     {
       id: 'uf850',
-      name: 'uFactory 850',
-      tagline: 'Yüksek Hassasiyet, Maksimum Erişim',
+      name: 'UFACTORY 850',
+      tagline: 'Yüksek hassasiyet, uzun erişim',
       image: img('uf850-1.png'),
       gallery: [img('uf850-1.png'), img('uf850-2.png'), img('uf850-3.png'), img('uf850-4.jpg')],
       videoBg: '/videos/850_small.mp4',
       url: RS + 'ufactory-850-cobot-isbirlikci-robot-kol-5kg-850mm-6-dof-karbon-fiber',
-      description: 'Daha uzun erişim mesafesine (850 mm) ihtiyaç duyan otomasyon projeleri için tasarlanmıştır. 17-bit yüksek çözünürlüklü enkoder sayesinde ±0.02 mm tekrar konumlandırma hassasiyeti sunar.',
+      description: 'Daha uzun erişim mesafesine (850 mm) ihtiyaç duyan otomasyon projeleri için tasarlanmıştır. 17 bitlik yüksek çözünürlüklü enkoder sayesinde ±0,02 mm tekrar konumlandırma hassasiyeti sunar.',
       specs: {
-        'Taşıma Kapasitesi': '5.0 kg',
-        'Erişim (Reach)': '850 mm',
-        'Tekrarlanabilirlik': '±0.02 mm',
-        'DoF': '6 Eksen',
-        'Güç Tüketimi': '240W (Maks 1000W)',
-        'Gövde Ağırlığı': '20.0 kg'
+        'Taşıma kapasitesi': '5,0 kg',
+        'Erişim': '850 mm',
+        'Tekrarlanabilirlik': '±0,02 mm',
+        'DoF': '6 eksen',
+        'Güç tüketimi': '240 W (azami 1.000 W)',
+        'Gövde ağırlığı': '20,0 kg'
       },
-      features: ['±0.02 mm Tekrarlanabilirlik', 'Dahili 100M Ethernet Kablosu', '17-bit Yüksek Çözünürlüklü Enkoder', 'PCB Lehimleme ve Lazer Kaynak'],
-      badge: 'Yüksek Hassasiyet',
+      features: ['±0,02 mm tekrarlanabilirlik', 'Dâhilî 100 Mbit Ethernet kablosu', '17 bitlik yüksek çözünürlüklü enkoder', 'PCB lehimleme ve lazer kaynağı'],
+      badge: 'Yüksek hassasiyet',
       color: 'from-orange-600 to-red-600'
     },
     {
       id: 'xarm5',
-      name: 'uFactory xArm 5 Lite',
-      tagline: 'Ekonomik SCARA Alternatifi',
+      name: 'UFACTORY xArm 5 Lite',
+      tagline: 'Ekonomik SCARA alternatifi',
       image: img('xarm5-1.jpg'),
       gallery: [img('xarm5-1.jpg'), img('xarm5-2.jpg'), img('xarm5-3.jpg'), img('xarm5-4.jpg'), img('xarm5-5.jpg')],
       url: RS + 'xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof',
-      description: 'Yatay düzlemdeki pick and place ve otomasyon görevleri için tasarlanmış 5 eksenli robot kolu. SCARA robot alternatiflerine göre uygun maliyetli bir çözümdür.',
+      description: 'xArm 5 Lite, yatay düzlemde parça alma ve yerleştirme ile otomasyon görevleri için tasarlanmış 5 eksenli bir robot koludur. SCARA robotlara alternatif olarak kullanılabilir.',
       specs: {
-        'Taşıma Kapasitesi': '3.0 kg',
-        'Erişim (Reach)': '700 mm',
-        'Tekrarlanabilirlik': '±0.1 mm',
-        'DoF': '5 Eksen',
-        'Min. Enerji': '8.4 Watt',
-        'Gövde Ağırlığı': '11.2 kg'
+        'Taşıma kapasitesi': '3,0 kg',
+        'Erişim': '700 mm',
+        'Tekrarlanabilirlik': '±0,1 mm',
+        'DoF': '5 eksen',
+        'Asgari güç tüketimi': '8,4 W',
+        'Gövde ağırlığı': '11,2 kg'
       },
-      features: ['Hızlı Amortisman (ROI)', 'Düzlemsel Yüksek Hız (Pitch 0°)', 'SCARA Doğrudan Alternatif', 'Kahve Kiosk Otomasyonu Uyumlu'],
-      badge: 'Giriş Seviyesi',
+      features: ['Yatırım geri dönüşü (ROI)', 'Düzlemsel hareket (pitch 0°)', 'SCARA robotlara alternatif', 'Kahve kiosku otomasyonuyla uyumlu'],
+      badge: 'Giriş seviyesi',
       color: 'from-emerald-600 to-teal-600',
       variants: [
-        { name: 'Ver A', desc: 'AC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof' },
-        { name: 'Ver B', desc: 'DC Kontrol Kutusu + 1.5m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-b' },
-        { name: 'Ver C', desc: 'AC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-c' },
-        { name: 'Ver D', desc: 'AC Kontrol Kutusu + 15m Kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-d' },
-        { name: 'Ver E', desc: 'DC Kontrol Kutusu + 3m Kablo', url: RS + 'xarm-5-lite-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5-dof-ver-e' }
+        { name: 'Model A', desc: 'AC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-5-kolaboratif-robot-cobot-isbirlikci-robot-kol-3kg-700mm-5dof' },
+        { name: 'Model B', desc: 'DC kontrol kutusu + 1,5 m kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-b' },
+        { name: 'Model C', desc: 'AC kontrol kutusu + 3 m kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-c' },
+        { name: 'Model D', desc: 'AC kontrol kutusu + 15 m kablo', url: RS + 'xarm-lite-5-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5dof-ver-d' },
+        { name: 'Model E', desc: 'DC kontrol kutusu + 3 m kablo', url: RS + 'xarm-5-lite-kolaboratif-cobot-isbirlikci-robot-3kg-700mm-5-dof-ver-e' }
       ]
     }
   ],
   lite: [
     {
       id: 'lite6',
-      name: 'uFactory Lite 6',
-      tagline: 'Kompakt Masaüstü Cobot',
+      name: 'UFACTORY Lite6',
+      tagline: 'Kompakt masaüstü robot kolu',
       image: img('lite6-1.jpg'),
       gallery: [img('lite6-1.jpg'), img('lite6kit-1.jpg')],
       videoBg: '/videos/lite6.mp4',
       url: RS + 'lite-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-1kg-440mm-6dof',
-      description: 'Alan kısıtlamasının olduğu laboratuvar prosesleri ve hafif endüstriyel görevler için 600 g taşıma kapasitesi. Dahili kontrol kutusu ve 130x140 mm minimal oturma alanıyla tak-çalıştır kullanım.',
+      description: 'Lite6, alanın sınırlı olduğu laboratuvar uygulamaları ve hafif endüstriyel görevler için 600 g taşıma kapasitesi sunar. Dâhilî kontrol kutusu ve 130 × 140 mm kompakt taban alanıyla tak ve çalıştır kullanım sağlar.',
       specs: {
-        'Taşıma Kapasitesi': '600 g',
-        'Erişim (Reach)': '440 mm',
-        'Tekrarlanabilirlik': '±0.5 mm',
-        'DoF': '6 Eksen',
-        'Kontrol Kutusu': 'Gövdeye Dahil',
-        'Gövde Ağırlığı': '7.2 kg'
+        'Taşıma kapasitesi': '600 g',
+        'Erişim': '440 mm',
+        'Tekrarlanabilirlik': '±0,5 mm',
+        'DoF': '6 eksen',
+        'Kontrol kutusu': 'Gövdeye dâhil',
+        'Gövde ağırlığı': '7,2 kg'
       },
-      features: ['Dahili Kontrol Kutusu (Build-in)', '130x140mm Kompakt Oturma Alanı', 'Tam ROS/ROS2 Uyumluluğu', 'Harmonik Redüktör & BLDC'],
-      badge: 'AR-GE & Eğitim',
+      features: ['Dâhilî kontrol kutusu', '130 × 140 mm kompakt taban alanı', 'ROS ve ROS 2 uyumluluğu', 'Harmonik redüktör ve BLDC'],
+      badge: 'Ar-Ge ve eğitim',
       color: 'from-slate-700 to-slate-900',
       variants: [
-        { name: 'Lite 6', desc: 'Robot kol', galleryIndex: 0, url: RS + 'lite-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-1kg-440mm-6dof' },
-        { name: 'Lite 6 Kit', desc: 'Robot kol + elektrikli ve vakum tutucu', galleryIndex: 1, url: RS + 'lite-6-kolaboratif-robot-kiti' }
+        { name: 'Lite6', desc: 'Robot kolu', galleryIndex: 0, url: RS + 'lite-6-kolaboratif-robot-cobot-isbirlikci-robot-kol-1kg-440mm-6dof' },
+        { name: 'Lite6 kiti', desc: 'Robot kolu + elektrikli ve vakum tutucu', galleryIndex: 1, url: RS + 'lite-6-kolaboratif-robot-kiti' }
       ]
     }
   ],
   accessories: [
     {
       id: 'gripper-xarm',
-      name: 'uFactory xArm Gripper G2',
-      tagline: '2 Parmaklı Elektrikli Paralel Tutucu',
+      name: 'UFACTORY xArm Gripper G2',
+      tagline: '2 parmaklı elektrikli paralel tutucu',
       image: img('g2-1.jpg'),
       gallery: [img('g2-1.jpg'), img('g2-2.jpg')],
       url: RS + 'ufactory-xarm-gripper-g2-elektrikli-paralel-robot-tutucu',
-      description: 'Gelişmiş endüstriyel otomasyon süreçleri için tasarlanan xArm Gripper G2, 5 kg payload desteği ve 50N maksimum kavrama gücü ile zorlu tutma/bırakma (pick & place) operasyonlarında üstün stabilite sunar. Dahili 12-bit mutlak enkoder sistemi sayesinde yalnızca ağır cisimleri değil, kırılgan ve hassas malzemeleri de kontrollü kuvvetle güvenle taşır. Harici kablolamaya son veren temiz entegrasyonu ve kolayca değiştirilebilen parmak uçlarıyla esnek üretim hatlarına uygundur.',
-      specs: { 'Strok Mesafesi': '84 ± 1 mm', 'Kavrama Kuvveti': '10 - 50 N', 'Kapanma Hızı': '15 - 225 mm/s' },
-      features: ['12-Bit Hassas Mutlak Enkoder', 'Programlanabilir Hız, Kuvvet ve Konum', 'Kablosuz (Pogopin) Ara Yüz Entegrasyonu', '2 Milyon+ Operasyon Ömrü'],
+      description: 'xArm Gripper G2, endüstriyel otomasyon uygulamalarında 5 kg taşıma kapasitesi ve 50 N azami kavrama kuvveti sunar. Dâhilî 12 bitlik mutlak enkoder, hız, kuvvet ve konum kontrolünü destekler. Pogo pin arayüzü, harici bağlantı kablosu ihtiyacını azaltır. Değiştirilebilir parmak uçlarıyla farklı parça geometrilerine uyarlanabilir.',
+      specs: { 'Strok mesafesi': '84 ± 1 mm', 'Kavrama kuvveti': '10–50 N', 'Kapanma hızı': '15–225 mm/s' },
+      features: ['12 bitlik mutlak enkoder', 'Programlanabilir hız, kuvvet ve konum', 'Pogo pin arayüzüyle bağlantı', '2 milyondan fazla çalışma çevrimi'],
       color: 'from-gray-600 to-gray-800'
     },
     {
       id: 'bio',
-      name: 'uFactory xArm BIO Gripper G2',
-      tagline: 'Elektrikli Paralel Sıvı Taşıma Tutucusu',
+      name: 'UFACTORY xArm BIO Gripper G2',
+      tagline: 'Elektrikli paralel sıvı taşıma tutucusu',
       image: img('bio-1.webp'),
       videoBg: '/videos/bio_gripper.mp4',
       gallery: [img('bio-1.webp'), img('bio-2.webp'), img('bio-3.webp'), img('bio-4.webp')],
       url: RS + 'ufactory-xarm-bio-gripper-g2-elektrikli-paralel-robot-tutucu',
-      description: 'Hassas sıvı transferi ve laboratuvar otomasyonu süreçleri için geliştirilen BIO Gripper G2, esnek işbirlikçi yapısıyla öne çıkar. Değiştirilebilir parmak uçları sayesinde farklı deney tüplerine kolayca uyum sağlarken hız, pozisyon ve kuvvet kontrolüyle projelere hızla entegre olur.',
-      specs: { 'Strok (Açıklık)': '71 - 150 mm', 'Kavrama Gücü': '20N', 'Haberleşme': 'RS-485 (Modbus-RTU)' },
-      features: ['Düşme (Drop) & Kavrama Algılama', 'Hız (0-4000) ve Kuvvet Kontrolü', 'Değiştirilebilir Uç Tasarımı', '24 VDC (1.5A Tepe) Anma Gerilimi'],
+      description: 'BIO Gripper G2, sıvı transferi ve laboratuvar otomasyonu için geliştirilen elektrikli bir tutucudur. Değiştirilebilir parmak uçlarıyla farklı deney tüplerine uyarlanabilir. Hız, konum ve kuvvet kontrolü, kavrama işleminin uygulamaya göre ayarlanmasını sağlar.',
+      specs: { 'Strok (açıklık)': '71–150 mm', 'Kavrama kuvveti': '20 N', 'Haberleşme': 'RS-485 (Modbus RTU)' },
+      features: ['Düşme ve kavrama algılama', 'Hız (0–4.000) ve kuvvet kontrolü', 'Değiştirilebilir uç tasarımı', '24 V DC anma gerilimi, 1,5 A tepe akımı'],
       color: 'from-gray-600 to-gray-800'
     },
     {
       id: 'vacuum',
-      name: 'uFactory xArm Vacuum Gripper',
-      tagline: 'Entegre Pompasıyla Pürüzsüz Tutuş',
+      name: 'UFACTORY xArm Vacuum Gripper',
+      tagline: 'Dâhilî pompalı vakum tutucu',
       image: img('vac-1.jpg'),
       gallery: [img('vac-1.jpg'), img('vac-2.jpg'), img('vac-3.jpg'), img('vac-4.jpg')],
       url: RS + 'ufactory-xarm-vacuum-gripper',
-      description: 'Elektrikli vakum jeneratörü ile harici kompresör ihtiyacını ortadan kaldırır. -55 kPa vakum seviyesi; düz yüzeyli metaller veya karton kutular için 5 kg tam kapasite uyumu.',
-      specs: { 'Vakum Seviyesi': '-55kPa (%78)', 'Hava Akışı': '4 L/dakika', 'Kapasite': '5 kg' },
+      description: 'Elektrikli vakum jeneratörü, harici kompresör ihtiyacını ortadan kaldırır. −55 kPa vakum seviyesi ve 5 kg taşıma kapasitesiyle düz yüzeyli metal parçaları veya karton kutuları kavramak için kullanılabilir.',
+      specs: { 'Vakum seviyesi': '−55 kPa (%78)', 'Hava akışı': '4 L/dakika', 'Kapasite': '5 kg' },
       color: 'from-gray-600 to-gray-800'
     },
     {
       id: 'gripper-lite',
-      name: 'Gripper Lite & Vacuum Lite',
-      tagline: 'Lite 6 Özel Uç Efektörleri',
+      name: 'Gripper Lite ve Vacuum Lite',
+      tagline: 'Lite6 için uç işleyiciler',
       image: img('glite-2.jpg'),
       gallery: [img('glite-2.jpg'), img('glite-1.jpg'), img('vlite-3.jpg'), img('vlite-1.jpg'), img('vlite-2.jpg')],
       url: RS + 'gripper-lite-ufactory-lite-6-robot-kol-icin-tutucu',
-      description: 'Masaüstü Lite 6 serisi için 350 g ağırlığında elektrikli tutucu (5N kuvvet, 16 mm strok) ve 250 g ağırlığında vakum (-40 kPa) tutucu versiyonları.',
-      specs: { 'Kuvvet / Basınç': '5N / -40kPa', 'Ağırlık': '250g - 350g', 'Geri Bildirim': 'Pick-Up Detection' },
+      description: 'Lite6 için Gripper Lite ve Vacuum Lite olmak üzere iki tutucu seçeneği bulunur. Elektrikli Gripper Lite, 350 g ağırlığında olup 5 N kavrama kuvveti ve 16 mm strok sunar. Vacuum Lite ise 250 g ağırlığındadır ve −40 kPa vakum basıncıyla çalışır.',
+      specs: { 'Kuvvet / basınç': '5 N / −40 kPa', 'Ağırlık': '250–350 g', 'Geri bildirim': 'Nesne algılama' },
       color: 'from-gray-600 to-gray-800',
       variants: [
-        { name: 'Gripper Lite', desc: 'Elektrikli tutucu', galleryIndex: 0, specs: { 'Strok': '16 mm', 'Kavrama Kuvveti': '5 N', 'Ağırlık': '350 g' }, url: RS + 'gripper-lite-ufactory-lite-6-robot-kol-icin-tutucu' },
-        { name: 'Vacuum Lite', desc: 'Vakum tutucu', galleryIndex: 2, specs: { 'Vakum Basıncı': '-40 kPa', 'Ağırlık': '250 g', 'Geri Bildirim': 'Nesne algılama' }, url: RS + 'vacuum-gripper-lite-lite-6-robot-kol-icin-vakum-tutucu' }
+        { name: 'Gripper Lite', desc: 'Elektrikli tutucu', galleryIndex: 0, specs: { 'Strok': '16 mm', 'Kavrama kuvveti': '5 N', 'Ağırlık': '350 g' }, url: RS + 'gripper-lite-ufactory-lite-6-robot-kol-icin-tutucu' },
+        { name: 'Vacuum Lite', desc: 'Vakum tutucu', galleryIndex: 2, specs: { 'Vakum basıncı': '−40 kPa', 'Ağırlık': '250 g', 'Geri bildirim': 'Nesne algılama' }, url: RS + 'vacuum-gripper-lite-lite-6-robot-kol-icin-vakum-tutucu' }
       ]
     },
     {
       id: 'ft-sensor',
-      name: '6 Eksenli Kuvvet/Tork Sensörü',
-      tagline: 'Robota Dokunma Duyusu Kazandırın',
+      name: '6 eksenli kuvvet/tork sensörü',
+      tagline: '6 eksende kuvvet ve tork ölçümü',
       image: img('ft-1.jpg'),
       gallery: [img('ft-1.jpg'), img('ft-2.jpg'), img('ft-3.jpg')],
       url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu',
-      description: 'x/y/z eksenlerindeki kuvvetleri ve tork momentlerini 100 mN hassasiyetle ölçer. Hassas polisaj ve mil-delik montajı için kuvvet/empedans kontrolü sağlar.',
-      specs: { 'Kuvvet Aralığı': '150N - 200N', 'Tork Aralığı': '4Nm', 'Çözünürlük': '100mN / 5mNm' },
+      description: 'X, Y ve Z eksenlerindeki kuvvet ve tork bileşenlerini ölçer. Kuvvet çözünürlüğü 100 mN, tork çözünürlüğü 5 mN·m’dir. Hassas polisaj ve mil-delik montajı uygulamalarında kuvvet ve empedans kontrolü için kullanılabilir.',
+      specs: { 'Kuvvet aralığı': '150–200 N', 'Tork aralığı': '4 N·m', 'Çözünürlük': '100 mN / 5 mN·m' },
       color: 'from-slate-700 to-slate-900',
       variants: [
         { name: 'Sensör', desc: 'xArm uyumlu kuvvet/tork sensörü', url: RS + '6-eksen-kuvvet-tork-sensoru-xarm-robot-kol-uyumlu' }
@@ -541,58 +543,58 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'uarm', Product[]> = {
     },
     {
       id: 'linear-motor',
-      name: 'Direct Drive Lineer Motor',
-      tagline: 'Otonomiyi Raylara Taşıyın',
+      name: 'Doğrudan tahrikli lineer motor',
+      tagline: 'Robot kolu için yatay hareket',
       image: img('lin700-1.webp'),
       gallery: [img('lin700-1.webp'), img('lin700-2.jpg'), img('lin700-3.jpg'), img('lin700-4.webp'), img('lin700-5.jpg')],
       url: RS + 'direct-drive-lineer-motor-xarm-6-uyumlu',
-      description: 'Doğrudan tahrikli lineer ray sistemi, robotu birden fazla iş istasyonu arasında taşır. 700, 1000 ve 1500 mm strok seçenekleri; 1 m/s hız ve 200 kg taşıma kapasitesi sunar.',
-      specs: { 'Menzil (Strok)': '700/1000/1500 mm', 'Hız': '1 m/s', 'Yük (Payload)': '200 kg' },
+      description: 'Doğrudan tahrikli lineer ray sistemi, robotu birden fazla iş istasyonu arasında taşır. 700, 1.000 ve 1.500 mm strok seçenekleri bulunur. Sistem, 1 m/s hız ve 200 kg taşıma kapasitesi sunar.',
+      specs: { 'Menzil (strok)': '700 / 1.000 / 1.500 mm', 'Hız': '1 m/s', 'Taşıma kapasitesi': '200 kg' },
       color: 'from-slate-700 to-slate-900',
       variants: [
         { name: '700 mm', desc: 'xArm uyumlu lineer motor', url: RS + 'direct-drive-lineer-motor-xarm-6-uyumlu' },
-        { name: '1000 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1000mm' },
-        { name: '1500 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1500mm' },
-        { name: 'xArm 6 + Motor', desc: 'xArm 6 ile birlikte', url: RS + 'xarm-6-kolaboratif-robot-direct-drive-lineer-motor' }
+        { name: '1.000 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1000mm' },
+        { name: '1.500 mm', desc: 'Lineer motor kiti', url: RS + 'direct-drive-lineer-motor-kiti-1500mm' },
+        { name: 'xArm 6 + motor', desc: 'xArm 6 ile birlikte', url: RS + 'xarm-6-kolaboratif-robot-direct-drive-lineer-motor' }
       ]
     }
   ],
   uarm: [
     {
       id: 'conveyor-kit',
-      name: 'uArm Konveyör Bant Sistemi',
-      tagline: 'Conveyor — Nesne Taşıma ve Besleme',
+      name: 'uArm konveyör bant sistemi',
+      tagline: 'Nesne taşıma ve besleme',
       image: img('conv-3.jpg'),
       gallery: [img('conv-3.jpg'), img('conv-4.webp'), img('conv-2.jpg'), img('conv-1.jpg')],
       url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor',
-      description: 'uArm robot kolunun yanında çalışan mini konveyör, nesneleri taşıyıcı bant üzerinde robotun çalışma alanına getirir. Eğimli besleme bandı nesneleri ana hatta aktarır; sistem ultrasonik sensör, renk sensörü ve kızılötesi sayıcıyla kontrol edilir. Paket, konveyör ve besleme bandıyla birlikte kontrolör, bağlantı plakası, iki uArm statoru, güç kaynağı ve bağlantı kablolarını içerir. Görsellerdeki uArm Swift Pro robot kolları pakete dahil değildir; ayrıca temin edilir.',
-      specs: { 'Uyumlu Robot': 'uArm Swift Pro', 'Taşınan Yük': '500 g', 'Maksimum Hız': '100 mm/s', 'Giriş Gerilimi': 'DC 12 V', 'Nominal Güç': '5 W', 'Robot Kol': 'Dahil değil' },
+      description: 'uArm robot kolunun yanında çalışan mini konveyör, nesneleri taşıyıcı bant üzerinde robotun çalışma alanına getirir. Eğimli besleme bandı nesneleri ana hatta aktarır; sistem ultrasonik sensör, renk sensörü ve kızılötesi sayıcıyla kontrol edilir. Paket, konveyör ve besleme bandıyla birlikte kontrolör, bağlantı plakası, iki uArm statoru, güç kaynağı ve bağlantı kablolarını içerir. Görsellerdeki uArm Swift Pro robot kolları pakete dâhil değildir; ayrıca temin edilir.',
+      specs: { 'Uyumlu robot': 'uArm Swift Pro', 'Taşınan yük': '500 g', 'Azami hız': '100 mm/s', 'Giriş gerilimi': 'DC 12 V', 'Nominal güç': '5 W', 'Robot kolu': 'Dâhil değil' },
       features: ['Konveyör ve eğimli besleme bandı', 'Ultrasonik sensör, renk sensörü ve kızılötesi sayıcıyla kontrol', 'Kontrolör ve bağlantı kabloları', 'Bağlantı plakası ve iki robot kolu statoru'],
-      badge: 'Taşıyıcı Bant',
+      badge: 'Taşıyıcı bant',
       color: 'from-indigo-600 to-blue-800',
     },
     {
       id: 'uarm-slider',
-      name: 'uArm Slider Kızak Sistemi',
-      tagline: 'Robot Kolu için Yatay Hareket Platformu',
+      name: 'uArm Slider kızak sistemi',
+      tagline: 'Robot kolu için yatay hareket platformu',
       image: img('slider-5.webp'),
       gallery: [img('slider-5.webp'), img('slider-4.webp'), img('slider-3.jpg'), img('slider-2.jpg'), img('slider-1.jpg')],
       url: RS + 'uarm-egitim-kiti-slider-conveyor',
-      description: 'uArm robot kolunun monte edildiği motorlu kayar platform, robotu ray boyunca yatayda hareket ettirir. Kızak, step motor ve dişli kutusuyla tahrik edilir. Limit anahtarı başlangıç noktasını belirler, ultrasonik sensör yatay konum bilgisini sağlar ve renk sensörü nesne kavrama noktasının belirlenmesinde kullanılır. Paket; kızak, uArm kontrolörü, sensörler, güç kaynağı, bağlantı kabloları ve montaj altlığını içerir. Görsellerdeki uArm robot kolu dahil değildir; ayrıca temin edilir.',
-      specs: { 'Çalışma Aralığı': '635 mm', 'Maksimum Hız': '100 mm/s', 'Taşıma Kapasitesi': '4 kg', 'Giriş Gerilimi': 'DC 12 V', 'Kontrol Kartı': 'Arduino Mega 2560', 'Boyutlar': '756 × 291 × 87 mm', 'Robot Kol': 'Dahil değil' },
+      description: 'uArm robot kolunun monte edildiği motorlu kayar platform, robotu ray boyunca yatayda hareket ettirir. Kızak, step motor ve dişli kutusuyla tahrik edilir. Limit anahtarı başlangıç noktasını belirler, ultrasonik sensör yatay konum bilgisini sağlar ve renk sensörü nesne kavrama noktasının belirlenmesinde kullanılır. Paket, kızak, uArm kontrolörü, sensörler, güç kaynağı, bağlantı kabloları ve montaj altlığını içerir. Görsellerdeki uArm robot kolu dâhil değildir; ayrıca temin edilir.',
+      specs: { 'Çalışma aralığı': '635 mm', 'Azami hız': '100 mm/s', 'Taşıma kapasitesi': '4 kg', 'Giriş gerilimi': 'DC 12 V', 'Kontrol kartı': 'Arduino Mega 2560', 'Boyutlar': '756 × 291 × 87 mm', 'Robot kolu': 'Dâhil değil' },
       features: ['Step motor ve dişli kutusuyla tahrik', 'Ultrasonik sensör, renk sensörü ve limit anahtarı', 'uArm kontrolörü ve bağlantı kabloları', 'Tek robot kolu için montaj altlığı'],
-      badge: 'Motorlu Kızak',
+      badge: 'Motorlu kızak',
       color: 'from-indigo-600 to-blue-800'
     },
     {
       id: 'laser-head',
       name: 'uArm Laser Head',
-      tagline: 'Lazer Gravür ve Eksiltmeli İmalat',
+      tagline: 'Lazer gravür ve yüzey işleme',
       image: img('laser-3.jpg'),
       gallery: [img('laser-3.jpg'), img('laser-1.jpg'), img('laser-2.jpg'), img('laser-4.jpg'), img('laser-5.jpg')],
       url: RS + 'uarm-laser-head-lazer-gravur-kafasi',
-      description: 'uArm robot kolunu lazer gravür makinesine dönüştüren lazer modülü. Ahşap, MDF, karton ve deri yüzeyler üzerinde hassas gravür ve işleme.',
-      specs: { 'Uygulama': 'Gravür / Kesim', 'Materyal': 'Ahşap, MDF, Deri', 'Ekipman': 'Güvenlik Gözlüğü Dahil' },
+      description: 'uArm Laser Head, robot koluna takılarak lazer gravür uygulamalarında kullanılır. Ahşap, MDF, karton ve deri yüzeyler üzerinde gravür ve yüzey işleme yapılmasını sağlar.',
+      specs: { 'Uygulama': 'Gravür / kesim', 'Materyal': 'Ahşap, MDF, deri', 'Ekipman': 'Güvenlik gözlüğü dâhil' },
       color: 'from-red-600 to-orange-800'
     }
   ]
@@ -843,7 +845,7 @@ const App = () => {
             <div className="flex-shrink-0 flex items-center gap-3 group">
               {/* Robot Sepeti Logo */}
               <a href="https://www.robotsepeti.com/" target="_blank" rel="noopener noreferrer" aria-label="RobotSepeti mağazasına git" className="flex items-center">
-                <img src="/images/robotsepeti_logo_cropped.png" alt="Robotsepeti - uFactory Türkiye Yetkili Distribütörü" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
+                <img src="/images/robotsepeti_logo_cropped.png" alt="RobotSepeti — UFACTORY Türkiye yetkili distribütörü" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_10px_rgba(0,0,0,0.1)]" />
               </a>
               {/* Divider */}
               <div className="h-8 w-px bg-slate-300"></div>
@@ -858,13 +860,13 @@ const App = () => {
             </div>
 
             <div className="hidden lg:flex space-x-8 items-center font-medium text-sm tracking-wide">
-              <a href="#katalog"    className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'katalog' ? 'is-active' : ''}`}>Teknik Özellikler</a>
-              <a href="#yazilim"    className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'yazilim' ? 'is-active' : ''}`}>Yazılım Ekosistemi</a>
+              <a href="#katalog"    className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'katalog' ? 'is-active' : ''}`}>Teknik özellikler</a>
+              <a href="#yazilim"    className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'yazilim' ? 'is-active' : ''}`}>Yazılım ekosistemi</a>
               <a href="#vakalar"    className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'vakalar' ? 'is-active' : ''}`}>Sektörler</a>
-              <a href="#avantajlar" className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'avantajlar' ? 'is-active' : ''}`}>Avantajlar & SSS</a>
+              <a href="#avantajlar" className={`nav-link text-slate-600 hover:text-slate-900 transition-colors ${activeSection === 'avantajlar' ? 'is-active' : ''}`}>Avantajlar ve SSS</a>
               <Magnetic>
                 <a href="#iletisim" className="btn-glow bg-slate-900 text-white px-6 py-2.5 rounded-full font-bold hover:bg-orange-500 hover:text-white transition-all shadow-[0_0_20px_rgba(0,0,0,0.1)] flex items-center gap-2">
-                  Projeyi Anlat
+                  Projeyi anlat
                 </a>
               </Magnetic>
             </div>
@@ -881,11 +883,11 @@ const App = () => {
           <div className="lg:hidden bg-white border-t border-slate-200 shadow-lg">
             <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col font-semibold text-slate-700">
               {[
-                ['#katalog', 'Teknik Özellikler'],
-                ['#yazilim', 'Yazılım Ekosistemi'],
+                ['#katalog', 'Teknik özellikler'],
+                ['#yazilim', 'Yazılım ekosistemi'],
                 ['#vakalar', 'Sektörler'],
-                ['#avantajlar', 'Avantajlar & SSS'],
-                ['#iletisim', 'Projeyi Anlat'],
+                ['#avantajlar', 'Avantajlar ve SSS'],
+                ['#iletisim', 'Projeyi anlat'],
               ].map(([href, label]) => (
                 <a key={href} href={href} onClick={() => setIsMenuOpen(false)} className="py-3 px-2 border-b border-slate-100 last:border-0 hover:text-orange-600">{label}</a>
               ))}
@@ -916,7 +918,7 @@ const App = () => {
             poster="/images/products/rs-xarm6-1.jpg"
             onEnded={handleVideoEnded}
             onTimeUpdate={handleTimeUpdate}
-            aria-label="uFactory Endüstriyel Robot Kolu Serisi"
+            aria-label="UFACTORY endüstriyel robot kolu serisi"
             className="w-full h-full object-cover scale-110"
             src={heroVideoSrc}
           ></video>
@@ -951,7 +953,7 @@ const App = () => {
           <div className="flex justify-between items-start w-full">
             <div className="max-w-full bg-white/80 backdrop-blur-md px-4 sm:px-5 py-3 rounded-2xl shadow-lg border border-white/60 pointer-events-auto transition-transform duration-300 hover:scale-[1.02]">
               <h1 className="text-xs sm:text-sm md:text-base font-bold text-slate-900 tracking-wide flex flex-col items-start sm:flex-row sm:items-center gap-1 sm:gap-2">
-                <span className="typewriter">uFactory Türkiye Yetkili Distribütörü</span>
+                <span className="typewriter">UFACTORY Türkiye yetkili distribütörü</span>
                 <span className="text-white bg-orange-600 px-2 py-0.5 rounded text-xs font-black tracking-widest shadow-sm animate-fade-up" style={{ animationDelay: '2.5s' }}>ROBOTSEPETİ</span>
               </h1>
             </div>
@@ -962,7 +964,7 @@ const App = () => {
             <div className="pointer-events-auto">
               <Magnetic strength={0.3}>
                 <a href="#katalog" className="btn-glow bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-orange-600 transition-all duration-300 flex items-center gap-2 shadow-2xl shadow-slate-900/30 hover:shadow-orange-500/40 hover:-translate-y-0.5 group">
-                  Kataloğu Keşfet <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                  Kataloğu keşfet <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </Magnetic>
             </div>
@@ -982,10 +984,10 @@ const App = () => {
       <section className="py-16 bg-slate-50 border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Reveal as="h2" variant="up" className="text-3xl md:text-4xl font-black text-slate-900 mb-6">
-            uFactory Robot Kolu Serileri Nedir?
+            UFACTORY robot kolu serileri nelerdir?
           </Reveal>
           <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-600 leading-relaxed">
-            uFactory; üretim, montaj, parça taşıma ve robotik araştırmalar için robot kolları geliştirir. <strong>xArm 6 eksenli robot</strong> 5 kg, <strong>xArm 7</strong> ise 3,5 kg taşıma kapasitesine sahiptir. Python, C++ ve ROS araçlarıyla kontrol edilebilir; model seçimi taşıma kapasitesi, erişim ve uygulamanın hareket gereksinimlerine göre yapılır.
+            UFACTORY, üretim, montaj, parça taşıma ve robotik araştırmalar için robot kolları geliştirir. <strong>xArm 6</strong> 5 kg, <strong>xArm 7</strong> ise 3,5 kg taşıma kapasitesine sahiptir. Python, C++ ve ROS araçlarıyla kontrol edilebilir; model seçimi taşıma kapasitesi, erişim ve uygulamanın hareket gereksinimlerine göre yapılır.
           </Reveal>
         </div>
       </section>
@@ -1000,10 +1002,10 @@ const App = () => {
           <div hidden={Boolean(selectedProduct)} className="relative mb-16">
             <div className="text-center">
               <Reveal as="h2" variant="up" className="text-4xl md:text-5xl font-black text-slate-900 mb-6">
-                Teknik Özellikler ve Payload Bilgileri
+                Teknik özellikler ve taşıma kapasitesi
               </Reveal>
               <Reveal as="p" variant="up" delay={2} className="text-slate-600 text-lg max-w-2xl mx-auto mb-10">
-                İhtiyacınıza uygun taşıma kapasitesi (payload) ve erişim mesafesine sahip, esnek üretime uygun uFactory modellerini ve teknik özelliklerini inceleyin.
+                İhtiyacınıza uygun taşıma kapasitesi (payload) ve erişim mesafesine sahip, esnek üretime uygun UFACTORY modellerini ve teknik özelliklerini inceleyin.
               </Reveal>
 
               <Reveal variant="scale" delay={3} className="inline-block">
@@ -1033,7 +1035,7 @@ const App = () => {
                         aria-pressed={isActive}
                         className={`tab-pill ${isActive ? 'is-active text-white' : 'text-slate-600 hover:text-slate-900'} px-6 sm:px-8 py-3 rounded-full font-bold text-sm`}
                       >
-                        {tab === 'xarm' ? 'Endüstriyel xArm & 850' : tab === 'lite' ? 'Masaüstü Lite Serisi' : tab === 'accessories' ? 'Uç İşleyiciler & Çevre' : 'uArm Aksesuarları'}
+                        {tab === 'xarm' ? 'Endüstriyel xArm ve 850' : tab === 'lite' ? 'Masaüstü Lite6' : tab === 'accessories' ? 'Uç işleyiciler ve aksesuarlar' : 'uArm aksesuarları'}
                       </button>
                     );
                   })}
@@ -1070,14 +1072,14 @@ const App = () => {
                       muted
                       playsInline
                       poster={product.image}
-                      aria-label={`${product.name} — Robotsepeti uFactory Türkiye`}
+                      aria-label={`${product.name} — RobotSepeti UFACTORY Türkiye`}
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       src={product.videoBg}
                     />
                   ) : (
                     <ImageBlurUp
                       src={product.image}
-                      alt={`${product.name} — Robotsepeti uFactory Türkiye`}
+                      alt={`${product.name} — RobotSepeti UFACTORY Türkiye`}
                       className="absolute inset-0 w-full h-full object-contain p-6 bg-white group-hover:scale-105 transition-transform duration-700"
                     />
                   )}
@@ -1090,7 +1092,7 @@ const App = () => {
                     <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">{product.description}</p>
                   </div>
                   <div className="flex items-center text-orange-500 font-bold text-sm mt-4 group-hover:text-orange-600 transition-colors uppercase tracking-wider">
-                    Teknik Analizi Gör <ChevronRight size={16} className="ml-1 group-hover:translate-x-2 transition-transform" />
+                    Teknik detayları gör <ChevronRight size={16} className="ml-1 group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
               </TiltCard>
@@ -1127,7 +1129,7 @@ const App = () => {
                           loop 
                           muted 
                           playsInline 
-                          aria-label={`${selectedProduct.name} endüstriyel robot kolu inceleme — Robotsepeti`}
+                          aria-label={`${selectedProduct.name} endüstriyel robot kolu inceleme — RobotSepeti`}
                           key={selectedProduct.videoBg}
                           className="absolute inset-0 w-full h-full object-contain bg-slate-50"
                           style={{ objectPosition: 'center center' }}
@@ -1151,7 +1153,7 @@ const App = () => {
                           ) : selectedProduct.image ? (
                             <img 
                               src={selectedProduct.image}
-                              alt={`${selectedProduct.name} — Robotsepeti`}
+                              alt={`${selectedProduct.name} — RobotSepeti`}
                               style={{ transformOrigin: zoomOrigin }}
                               className="w-full h-full object-contain bg-white transition-transform duration-200 ease-out group-hover/zoom:scale-[2]"
                               draggable={false}
@@ -1179,7 +1181,7 @@ const App = () => {
                       {showVideo && selectedProduct.videoBg && (
                         <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-slate-950/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
                           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                          <span className="text-white text-[10px] font-bold tracking-widest uppercase">Ürün Videosu</span>
+                          <span className="text-white text-[10px] font-bold tracking-widest uppercase">Ürün videosu</span>
                         </div>
                       )}
 
@@ -1248,7 +1250,7 @@ const App = () => {
                     <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-green-500/10 to-emerald-500/5 border border-green-500/20">
                       <div className="flex items-center gap-2 mb-1">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-green-600 text-[10px] font-bold tracking-widest uppercase">Fiyat ve Stok</span>
+                        <span className="text-green-600 text-[10px] font-bold tracking-widest uppercase">Fiyat ve stok</span>
                       </div>
                       <p className="text-green-800 text-sm">
                         Güncel fiyat, stok ve teslim süresi için{' '}
@@ -1262,7 +1264,7 @@ const App = () => {
                       <div className="mb-8">
                         <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                           <Settings size={14} className="text-orange-500" />
-                          Versiyon Seçenekleri
+                          Model seçenekleri
                         </h4>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                           {selectedProduct.variants.map((variant, i) => (
@@ -1299,7 +1301,7 @@ const App = () => {
                     <div className="mb-8">
                       <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                         <Cpu size={14} className="text-orange-500" />
-                        Donanım Spesifikasyonları
+                        Teknik özellikler
                       </h4>
                       <div className="product-spec-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-3">
                         {Object.entries(selectedProduct.variants?.[selectedVariant]?.specs || selectedProduct.specs).map(([key, value], i) => (
@@ -1320,7 +1322,7 @@ const App = () => {
                       <div className="mb-8">
                         <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                           <Target size={14} className="text-orange-500" />
-                          Mühendislik Özetleri
+                          Öne çıkan özellikler
                         </h4>
                         <ul className="grid sm:grid-cols-2 gap-3">
                           {selectedProduct.features.map((feature, i) => (
@@ -1346,7 +1348,7 @@ const App = () => {
                           onClick={triggerSparks}
                           className="spark-host btn-glow bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider hover:shadow-lg hover:shadow-orange-500/30 hover:scale-[1.02] transition-all duration-300 w-full flex justify-center items-center gap-2 relative"
                         >
-                          <ShoppingBag size={18} /> Teklif Almak İçin Tıklayın
+                          <ShoppingBag size={18} /> Teklif iste
                           {sparks.map((s) => (
                             <span
                               key={s.id}
@@ -1363,7 +1365,7 @@ const App = () => {
                       </Magnetic>
                       <Magnetic className="flex-1">
                         <a href={selectedProduct.variants?.[selectedVariant]?.url || selectedProduct.url || "https://www.robotsepeti.com"} target="_blank" rel="noopener noreferrer" className="bg-slate-100 text-slate-900 border border-slate-200 px-8 py-4 rounded-xl font-bold text-sm uppercase tracking-wider hover:bg-slate-200 transition-all duration-300 w-full flex justify-center items-center gap-2">
-                          <Globe size={18} /> RobotSepeti&apos;nde İncele
+                          <Globe size={18} /> RobotSepeti’nde incele
                         </a>
                       </Magnetic>
                     </div>
@@ -1379,40 +1381,40 @@ const App = () => {
       <section id="yazilim" className="py-24 bg-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-             <Reveal as="h4" variant="up" className="text-orange-600 font-bold tracking-widest uppercase text-sm mb-4">Açık Mimari & Endüstriyel Standartlar</Reveal>
-             <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">Yazılım Ekosistemi ve Güvenlik Ağı</Reveal>
+             <Reveal as="h4" variant="up" className="text-orange-600 font-bold tracking-widest uppercase text-sm mb-4">Açık mimari ve endüstriyel standartlar</Reveal>
+             <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">Yazılım ekosistemi ve güvenlik işlevleri</Reveal>
              <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-600 max-w-3xl mx-auto">
-                Açık kaynak kodlu yazılım ekosistemi sayesinde ek lisans maliyetleri olmadan geniş çaplı entegrasyon. Kullanıcı dostu arayüzlerden, ileri seviye ROS/ROS2 geliştirmelerine kadar kapsamlı donanım desteği. Python SDK ve Modbus TCP üzerinden robot kolu programlama kolaylığı.
+                UFACTORY robot kolları Studio arayüzü, Python ve C++ geliştirme kitleri ile ROS ve ROS 2 araçları üzerinden kontrol edilebilir. Modbus TCP, endüstriyel kontrol sistemleriyle haberleşmeyi destekler. Yazılım ve güvenlik işlevlerinin kapsamı, seçilen modele ve kontrolcüye göre değerlendirilmelidir.
              </Reveal>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-16">
             {/* Software Architecture */}
             <Reveal variant="left">
-              <h3 className="text-2xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Yazılım ve Yörünge Planlama</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Yazılım ve yörünge planlama</h3>
 
               <div className="space-y-8">
                 <Reveal variant="up" delay={1} className="flex gap-5">
                   <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0"><Settings size={28}/></div>
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-2">UFactory Studio & Blockly</h4>
-                    <p className="text-slate-600 leading-relaxed">Web tabanlı Studio arayüzünde Blockly bloklarıyla hareket görevleri oluşturulur. <strong>Teach by Hand (Manuel Mod):</strong> Robot elle yönlendirilerek konumlar kaydedilir. Kullanımdan önce montaj yönü ve yük bilgileri seçilen modelin kılavuzuna göre yapılandırılır.</p>
+                    <h4 className="text-xl font-bold text-slate-900 mb-2">UFACTORY Studio ve Blockly</h4>
+                    <p className="text-slate-600 leading-relaxed">Web tabanlı Studio arayüzünde Blockly bloklarıyla hareket görevleri oluşturulur. <strong>Teach by Hand (elle yönlendirme):</strong> Robot elle yönlendirilerek konumlar kaydedilir. Kullanımdan önce montaj yönü ve yük bilgileri seçilen modelin kılavuzuna göre yapılandırılır.</p>
                   </div>
                 </Reveal>
 
                 <Reveal variant="up" delay={2} className="flex gap-5">
                   <div className="w-14 h-14 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center flex-shrink-0"><Code size={28}/></div>
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-2">Python & C++ SDK, 250Hz Veri Akışı</h4>
-                    <p className="text-slate-600 leading-relaxed">Studio içindeki entegre Python IDE&apos;si ile görsel projeleri koda dönüştürün. <code>servo_cartesian</code> modları sayesinde dış kameralardan gelen anlık sapmalara milisaniyeler içinde reaksiyon gösterin.</p>
+                    <h4 className="text-xl font-bold text-slate-900 mb-2">Python ve C++ SDK, 250 Hz veri akışı</h4>
+                    <p className="text-slate-600 leading-relaxed">Studio içindeki Python geliştirme ortamıyla görsel projeleri koda dönüştürün. <code>servo_cartesian</code> komutuyla dış kameralardan gelen konum verilerine göre robot hareketini güncelleyin.</p>
                   </div>
                 </Reveal>
 
                 <Reveal variant="up" delay={3} className="flex gap-5">
                   <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center flex-shrink-0"><Server size={28}/></div>
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-2">ROS / ROS2 ve Digital Twin</h4>
-                    <p className="text-slate-600 leading-relaxed">MoveIt, RViz ve Gazebo ile tam entegre. Robotun fiziksel kurulumu yapılmadan önce dijital ikizi (Digital Twin) üzerinden <strong>Singularity (Tekillik)</strong> çözümleri ve kompleks kinematik hesaplamalar yapılabilir.</p>
+                    <h4 className="text-xl font-bold text-slate-900 mb-2">ROS ve ROS 2 ile dijital ikiz</h4>
+                    <p className="text-slate-600 leading-relaxed">MoveIt, RViz ve Gazebo ile entegrasyon desteklenir. Robotun fiziksel kurulumu yapılmadan önce dijital ikizi üzerinden <strong>tekillik</strong> analizi ve kinematik hesaplamalar yapılabilir.</p>
                   </div>
                 </Reveal>
               </div>
@@ -1420,25 +1422,25 @@ const App = () => {
 
             {/* Hardware Safety & Control */}
             <Reveal variant="right">
-              <h3 className="text-2xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Çalışma Sınırları ve Durdurma İşlevleri</h3>
+              <h3 className="text-2xl font-bold text-slate-900 mb-8 border-b border-slate-200 pb-4">Çalışma sınırları ve durdurma işlevleri</h3>
 
               <div className="grid sm:grid-cols-2 gap-6">
                  <Reveal variant="up" delay={1} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 card-lift hover:border-orange-500/30">
                     <Activity className="text-orange-500 mb-4" size={32} />
-                    <h4 className="font-bold text-slate-900 mb-2">Çarpışma Algılama ve Geri Sekme</h4>
-                    <p className="text-sm text-slate-600">Eklem torkundaki sapmalarla çarpışma algılama; 1–5 seviyesinde hassasiyet ayarı. Collision Rebound etkinleştirildiğinde robot, çarpışma algıladığı konumdan bir miktar geri çekilir.</p>
+                    <h4 className="font-bold text-slate-900 mb-2">Çarpışma algılama ve geri çekilme</h4>
+                    <p className="text-sm text-slate-600">Çarpışma, eklem torkundaki sapmalar üzerinden algılanır. Algılama hassasiyeti 1–5 seviyesinde ayarlanabilir. Collision Rebound etkinleştirildiğinde robot, çarpışma algıladığı konumdan bir miktar geri çekilir.</p>
                  </Reveal>
 
                  <Reveal variant="up" delay={2} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 card-lift hover:border-orange-500/30">
                     <Shield className="text-orange-500 mb-4" size={32} />
-                    <h4 className="font-bold text-slate-900 mb-2">Safety Boundary & İndirgenmiş Mod</h4>
+                    <h4 className="font-bold text-slate-900 mb-2">Çalışma sınırları ve indirgenmiş mod</h4>
                     <p className="text-sm text-slate-600">Kartezyen çalışma sınırları, TCP ve eklem hızları yazılımdan tanımlanır. İndirgenmiş mod Studio üzerinden veya yapılandırılmış kontrolcü girişleriyle etkinleştirilir.</p>
                  </Reveal>
 
                  <Reveal variant="up" delay={3} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 sm:col-span-2 flex flex-col sm:flex-row gap-6 items-center card-lift">
                     <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0"><Lock size={32}/></div>
                     <div>
-                      <h4 className="font-bold text-slate-900 mb-2">Durdurma ve Harici Girişler</h4>
+                      <h4 className="font-bold text-slate-900 mb-2">Durdurma ve harici girişler</h4>
                       <p className="text-sm text-slate-600">Kontrolcüdeki acil durdurma ve yapılandırılabilir Stop Moving girişleri hareketi durdurur. Safeguard Reset, koruyucu duruş sonrasında hareketin yeniden etkinleştirilmesini sağlar; giriş işlevleri Studio üzerinden ayarlanır.</p>
                     </div>
                  </Reveal>
@@ -1446,8 +1448,8 @@ const App = () => {
 
               {/* Control Boxes Info */}
               <Reveal variant="up" delay={4} className="mt-6 bg-slate-100 p-6 rounded-3xl text-slate-900">
-                 <h4 className="font-bold mb-3 flex items-center gap-2"><Cpu size={20} className="text-orange-500"/> Modüler Kontrol Kutuları (AC/DC)</h4>
-                 <p className="text-sm text-slate-600">Sabit hatlar için <strong>AC (100-240V)</strong>, AGV/AMR otonom mobil robotlar için 2.6 kg hafifliğinde <strong>DC (24-72V)</strong> kontrol kutusu seçenekleri. Her ikisi de zengin CI/CO, DI/DO, AI/AO arayüzleri barındırır.</p>
+                 <h4 className="font-bold mb-3 flex items-center gap-2"><Cpu size={20} className="text-orange-500"/> Modüler kontrol kutuları (AC/DC)</h4>
+                 <p className="text-sm text-slate-600">Sabit hatlar için <strong>AC (100–240 V)</strong>, AGV/AMR otonom mobil robotlar için 2,6 kg ağırlığında <strong>DC (24–72 V)</strong> kontrol kutusu seçenekleri bulunur. Her iki seçenek de CI/CO, DI/DO ve AI/AO arayüzleri barındırır.</p>
               </Reveal>
             </Reveal>
           </div>
@@ -1460,11 +1462,11 @@ const App = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:flex justify-between items-end mb-16">
                <div>
-                 <Reveal as="h4" variant="up" className="text-orange-500 font-bold tracking-widest uppercase text-sm mb-4">Global Uygulama Alanları ve Endüstriyel Çözümler</Reveal>
-                 <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-6">Hangi Sektörler İçin Uygundur?</Reveal>
+                 <Reveal as="h4" variant="up" className="text-orange-500 font-bold tracking-widest uppercase text-sm mb-4">Uygulama alanları ve endüstriyel çözümler</Reveal>
+                 <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-6">Hangi sektörler için uygundur?</Reveal>
                </div>
                <Reveal as="p" variant="up" delay={2} className="text-slate-400 max-w-md mt-6 lg:mt-0 font-medium">
-                 Farklı sektörlerden başarılı entegrasyon örnekleri ve saha uygulamaları. Üretim, AR-GE, Lojistik ve Gıda sektörlerinde endüstriyel robot kolu kullanımı.
+                 Endüstriyel robot kolları üretim, Ar-Ge, lojistik ve gıda sektörlerinde kullanılabilir. Aşağıdaki örnekler, farklı entegrasyon ve saha uygulamalarını gösterir.
                </Reveal>
             </div>
 
@@ -1473,40 +1475,40 @@ const App = () => {
                <Reveal variant="up" delay={1} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center"><Target size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Kutu İçi Parça Alma (3B Bin Picking)</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Kutu içinden parça alma (3B bin picking)</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Endüstrideki en zor problemlerden biri olan düzensiz kutu içi parça alma işlemi; 3B görüntü işleme ve makine öğrenimi xArm&apos;a entegre edilerek düşük maliyetli robot hücreleriyle otomatikleştirilebilir.</p>
-                  <button type="button" onClick={() => openProductById('xarm', 'xarm6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Kutudaki düzensiz parçaların alınması, xArm’a entegre edilen 3B görüntü işleme ve makine öğrenimi araçlarıyla otomatikleştirilebilir.</p>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 6 robot kolunu incele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 2 */}
                <Reveal variant="up" delay={2} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-full flex items-center justify-center"><Globe size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">VR ile Uzaktan Operasyon</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">VR ile uzaktan kontrol</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Nükleer veya kimyasal gibi tehlikeli alanlardaki görevler, xArm sistemlerinin sanal gerçeklik (VR) gözlükleriyle uzaktan ve sezgisel biçimde, bir insan kolu gibi yönetilmesiyle personel riske atılmadan yapılabilir.</p>
-                  <button type="button" onClick={() => openProductById('xarm', 'xarm7')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 7 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
+                  <p className="text-slate-600 mb-6 line-clamp-3">xArm sistemleri, sanal gerçeklik (VR) arayüzleriyle uzaktan kontrol edilebilir. Bu yaklaşım, robotik araştırma ve uzaktan manipülasyon uygulamalarında kullanılabilir.</p>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm7')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 7 robot kolunu incele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 3 */}
                <Reveal variant="up" delay={3} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-orange-500/20 text-orange-400 rounded-full flex items-center justify-center"><Briefcase size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Gıda ve Servis Otomasyonu</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Gıda ve servis otomasyonu</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Kahve hazırlama, dondurma servisi ve kızartma gibi tekrarlayan işler; xArm ve Lite 6 ile kurulan otonom kiosklarla standart kalitede ve kesintisiz yürütülebilir.</p>
-                  <button type="button" onClick={() => openProductById('xarm', 'xarm5')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 5 Lite Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Kahve hazırlama, dondurma servisi ve kızartma gibi tekrarlayan işler, xArm ve Lite6 ile kurulan kiosk sistemlerinde otomatikleştirilebilir.</p>
+                  <button type="button" onClick={() => openProductById('xarm', 'xarm5')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">xArm 5 Lite robot kolunu incele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
 
                {/* Case 4 */}
                <Reveal variant="up" delay={4} className="bg-white border border-slate-200 shadow-xl shadow-slate-200/50 p-8 rounded-3xl hover:border-orange-500/30 card-lift group">
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center"><Cpu size={24}/></div>
-                    <h3 className="text-2xl font-bold text-slate-900">Mobil Robotik (AMR)</h3>
+                    <h3 className="text-2xl font-bold text-slate-900">Mobil robotik (AMR)</h3>
                   </div>
-                  <p className="text-slate-600 mb-6 line-clamp-3">Hafif ve kompakt Lite 6, otonom mobil robotların (AMR) üzerine monte edilerek üniversite araştırmalarında ve robotik yarışmalarında mobil manipülasyon için kullanılabilir.</p>
-                  <button type="button" onClick={() => openProductById('lite', 'lite6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">Lite 6 Robot Kolunu İncele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
+                  <p className="text-slate-600 mb-6 line-clamp-3">Hafif ve kompakt Lite6, otonom mobil robotların (AMR) üzerine monte edilerek üniversite araştırmalarında ve robotik yarışmalarında mobil manipülasyon için kullanılabilir.</p>
+                  <button type="button" onClick={() => openProductById('lite', 'lite6')} className="text-orange-500 font-bold text-sm uppercase tracking-wider hover:text-orange-600 flex items-center">Lite6 robot kolunu incele <ChevronRight size={16} className="ml-1 group-hover:translate-x-1 transition-transform"/></button>
                </Reveal>
             </div>
          </div>
@@ -1516,8 +1518,8 @@ const App = () => {
       <section className="py-24 bg-slate-50 relative overflow-hidden border-t border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
-             <Reveal as="h4" variant="up" className="text-orange-700 font-bold tracking-widest uppercase text-sm mb-4">Robot Kolları ve Hareket Sistemleri</Reveal>
-             <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">uFactory Ürün Aileleri</Reveal>
+             <Reveal as="h4" variant="up" className="text-orange-700 font-bold tracking-widest uppercase text-sm mb-4">Robot kolları ve hareket sistemleri</Reveal>
+             <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">UFACTORY ürün aileleri</Reveal>
              <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-600 max-w-2xl mx-auto">
                 RobotSepeti&apos;nde sunulan serilerin taşıma kapasitesi, erişimi ve kullanım alanları.
              </Reveal>
@@ -1543,27 +1545,27 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <Reveal as="h2" variant="up" className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight break-words">
-              Robotsepeti&apos;nden uFactory Satın Almanın Avantajları
+              RobotSepeti’nden UFACTORY satın almanın avantajları
             </Reveal>
             <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-400 max-w-3xl mx-auto">
-              Türkiye tek yetkili distribütörü olarak uçtan uca endüstriyel otomasyon çözümleri sunuyoruz.
+              Türkiye’nin yetkili distribütörü olarak endüstriyel otomasyon çözümleri sunuyoruz.
             </Reveal>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
              <Reveal variant="up" delay={1} className="bg-slate-50 border border-slate-200 p-8 rounded-3xl card-lift hover:border-orange-500/30 group">
                 <Shield className="text-orange-500 mb-6 group-hover:scale-110 transition-transform duration-300" size={40} />
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Resmi Türkiye Garantisi</h3>
-                <p className="text-slate-600">Tüm uFactory xArm ve Lite6 serisi robot kolları ve aksesuarları, doğrudan Robotsepeti güvencesiyle garanti kapsamındadır.</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Resmî Türkiye garantisi</h3>
+                <p className="text-slate-600">Tüm UFACTORY xArm ve Lite6 serisi robot kolları ve aksesuarları, doğrudan RobotSepeti güvencesiyle garanti kapsamındadır.</p>
              </Reveal>
              <Reveal variant="up" delay={2} className="bg-slate-50 border border-slate-200 p-8 rounded-3xl card-lift hover:border-orange-500/30 group">
                 <Settings className="text-orange-500 mb-6 group-hover:rotate-90 transition-transform duration-500" size={40} />
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Teknik Destek ve Kurulum</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Teknik destek ve kurulum</h3>
                 <p className="text-slate-600">Alanında uzman mühendislik ekibimiz ile üretim hattınıza entegrasyon, Python SDK programlama ve ROS desteği sağlıyoruz.</p>
              </Reveal>
              <Reveal variant="up" delay={3} className="bg-slate-50 border border-slate-200 p-8 rounded-3xl card-lift hover:border-orange-500/30 group">
                 <Lock className="text-orange-500 mb-6 group-hover:scale-110 transition-transform duration-300" size={40} />
-                <h3 className="text-xl font-bold text-slate-900 mb-4">Stoktan Hızlı Teslimat</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Stok ve teslimat bilgisi</h3>
                 <p className="text-slate-600">RobotSepeti ürün sayfasından güncel stok durumunu inceleyin. Robot kolu, kontrolcü ve aksesuar seçiminiz için teslim süresini ekibimizden öğrenin.</p>
              </Reveal>
           </div>
@@ -1574,24 +1576,24 @@ const App = () => {
       <section className="py-24 bg-slate-50 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <Reveal as="h2" variant="up" className="text-4xl font-black text-slate-900 mb-6">Sık Sorulan Sorular</Reveal>
+            <Reveal as="h2" variant="up" className="text-4xl font-black text-slate-900 mb-6">Sık sorulan sorular</Reveal>
           </div>
 
           <div className="space-y-6">
             <Reveal variant="up" delay={2} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
               <h3 className="text-lg font-bold text-slate-900 mb-2">Hangi robot kolu benim endüstriyel projeme daha uygun?</h3>
-              <p className="text-slate-600">Seçim yaparken payload kapasitesi ve tekrar konumlandırma hassasiyeti kritiktir. xArm 6 genel endüstriyel kullanım, xArm 7 ise engelden kaçınma ve dar alanlar için idealdir. Detaylı teknik analiz için mühendislik ekibimizle görüşebilirsiniz.</p>
+              <p className="text-slate-600">Seçim yaparken taşıma kapasitesi ve tekrar konumlandırma hassasiyeti kritiktir. xArm 6 genel endüstriyel kullanım, xArm 7 ise engelden kaçınma ve dar alanlar için idealdir. Detaylı teknik analiz için mühendislik ekibimizle görüşebilirsiniz.</p>
             </Reveal>
             <Reveal variant="up" delay={3} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
               <h3 className="text-lg font-bold text-slate-900 mb-2">xArm serisi için hangi programlama dilleri destekleniyor?</h3>
-              <p className="text-slate-600">uFactory robot kolları tamamen açık mimariye sahiptir. ROS, ROS2 desteğinin yanı sıra kapsamlı Python SDK ve C++ kütüphaneleri ile programlanabilir. Ayrıca Modbus TCP üzerinden endüstriyel haberleşme mümkündür.</p>
+              <p className="text-slate-600">UFACTORY robot kolları tamamen açık mimariye sahiptir. ROS, ROS 2 desteğinin yanı sıra kapsamlı Python SDK ve C++ kütüphaneleri ile programlanabilir. Ayrıca Modbus TCP üzerinden endüstriyel haberleşme mümkündür.</p>
             </Reveal>
             <Reveal variant="up" delay={4} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
               <h3 className="text-lg font-bold text-slate-900 mb-2">Kurulum ve robot kolu programlama eğitim desteğiniz var mı?</h3>
-              <p className="text-slate-600">Evet, Robotsepeti olarak uFactory cobot sistemlerinin sahada kurulumu, entegrasyonu ve teknik personeliniz için temel robot kolu programlama eğitimlerini sağlıyoruz.</p>
+              <p className="text-slate-600">Evet, RobotSepeti olarak UFACTORY cobot sistemlerinin sahada kurulumu, entegrasyonu ve teknik personeliniz için temel robot kolu programlama eğitimlerini sağlıyoruz.</p>
             </Reveal>
             <Reveal variant="up" delay={5} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm card-lift hover:border-orange-500/30">
-              <h3 className="text-lg font-bold text-slate-900 mb-2">uFactory ürünlerinde teslimat süreleri nedir?</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">UFACTORY ürünlerinde teslimat süreleri nedir?</h3>
               <p className="text-slate-600">Teslim süresi seçilen model, kontrol kutusu, aksesuarlar ve güncel stok durumuna göre değişir. Ürün sayfasındaki stok bilgisini inceleyebilir veya RobotSepeti ekibinden siparişe özel teslim süresi alabilirsiniz.</p>
             </Reveal>
           </div>
@@ -1605,21 +1607,21 @@ const App = () => {
           
           <div className="bg-gradient-to-r from-white to-slate-100 rounded-3xl p-10 lg:p-16 mb-16 flex flex-col lg:flex-row items-center justify-between border border-slate-200 shadow-xl shadow-slate-200/50">
              <div className="lg:w-2/3 mb-8 lg:mb-0">
-               <h3 className="text-3xl font-black text-slate-900 mb-4">Türkiye&apos;nin Tek Yetkili Çözüm Ortağı</h3>
+               <h3 className="text-3xl font-black text-slate-900 mb-4">Türkiye’de yetkili çözüm ortağınız</h3>
                <p className="text-slate-400 leading-relaxed mb-6">
-                  Robot Sepeti (Robotsepeti Teknoloji A.Ş.), e-ticaretin ötesinde; endüstriyel Ar-Ge, Teknokent girişimleri ve Türk KOBİ&apos;leri için stratejik entegratördür.
+                  RobotSepeti Teknoloji A.Ş., endüstriyel Ar-Ge projelerine, teknokent girişimlerine ve KOBİ’lere robotik entegrasyon desteği sunar.
                </p>
                <ul className="grid sm:grid-cols-2 gap-4 text-sm text-slate-300 font-medium">
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> TL, USD, EUR Kur Esnekliği</li>
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Doğrudan Yerel Stok ve Yedek Parça</li>
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Çoklu Marka Robotik Entegrasyonu</li>
-                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> B2B Mühendislik Desteği & Kurulum</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> TL, USD ve EUR ile fiyatlandırma</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Yerel stok ve yedek parça</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> Farklı markalarla robotik entegrasyon</li>
+                  <li className="flex items-center gap-2 text-slate-700"><CheckCircle2 className="text-orange-500" size={18}/> B2B mühendislik desteği ve kurulum</li>
                </ul>
              </div>
              <div className="lg:w-1/3 flex flex-col items-center lg:items-end w-full">
                 <Magnetic strength={0.2}>
-                  <a href={gmailLink('uFactory Distribütör İletişim Talebi', 'Merhaba,\n\nuFactory ürünleri hakkında bilgi almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün/uygulama:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="btn-glow w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-orange-600/30 mb-4 inline-block text-center">
-                    Distribütörle İletişime Geç
+                  <a href={gmailLink('UFACTORY distribütör iletişim talebi', 'Merhaba,\n\nUFACTORY ürünleri hakkında bilgi almak istiyorum.\n\nFirma adı:\nAd soyad:\nTelefon:\nİlgilendiğim ürün/uygulama:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="btn-glow w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-5 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-orange-600/30 mb-4 inline-block text-center">
+                    Distribütörle iletişime geç
                   </a>
                 </Magnetic>
                 <a href="tel:+902126976214" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 14 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
@@ -1631,7 +1633,7 @@ const App = () => {
             <div className="flex items-center gap-6 mb-6 md:mb-0">
               {/* Robot Sepeti Logo - Footer */}
               <a href="https://www.robotsepeti.com/" target="_blank" rel="noopener noreferrer" aria-label="RobotSepeti mağazasına git" className="flex items-center">
-                <img src="/images/robotsepeti_logo_cropped.png" alt="Robotsepeti - uFactory Türkiye Yetkili Distribütörü" className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
+                <img src="/images/robotsepeti_logo_cropped.png" alt="RobotSepeti — UFACTORY Türkiye yetkili distribütörü" className="h-10 md:h-12 w-auto object-contain drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]" />
               </a>
               {/* Divider */}
               <div className="h-10 w-px bg-slate-300"></div>
@@ -1655,31 +1657,31 @@ const App = () => {
               <ul className="space-y-4">
                 <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976214" className="hover:text-orange-500">+90 212 697 62 14</a></li>
                 <li><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#128C7E] font-semibold hover:text-[#075E54]"><WhatsAppIcon size={18} /> WhatsApp: {WHATSAPP_DISPLAY}</a></li>
-                <li>Kurumsal teklif: <a href={gmailLink('uFactory Kurumsal Teklif Talebi', 'Merhaba,\n\nuFactory ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd Soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
+                <li>Kurumsal teklif: <a href={gmailLink('UFACTORY kurumsal teklif talebi', 'Merhaba,\n\nUFACTORY ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
                 <li>Teknik destek: <a href="mailto:destek@robotsepeti.com" className="hover:text-orange-500">destek@robotsepeti.com</a></li>
                 <li>Web: <a href="https://www.robotsepeti.com" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">www.robotsepeti.com</a></li>
-                <li className="leading-relaxed text-slate-500 mt-4">ROBOTSEPETİ Teknoloji A.Ş. — İstasyon Mah., Halkalı İstasyon Cad. No: 38/1, Küçükçekmece, İstanbul</li>
+                <li className="leading-relaxed text-slate-500 mt-4">RobotSepeti Teknoloji A.Ş. — İstasyon Mah., Halkalı İstasyon Cad. No: 38/1, Küçükçekmece, İstanbul</li>
               </ul>
             </div>
             <div>
-              <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Hızlı Linkler</h4>
+              <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Hızlı bağlantılar</h4>
               <ul className="space-y-4">
-                <li><a href="https://www.robotsepeti.com/ufactory" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">Tüm uFactory Ürünleri (RobotSepeti)</a></li>
-                <li><a href="#katalog" className="hover:text-orange-500 transition-colors">Robot Kolları ve Teknik Özellikler</a></li>
-                <li><a href="#yazilim" className="hover:text-orange-500 transition-colors">Yazılım Ekosistemi ve Güvenlik</a></li>
-                <li><a href="https://github.com/xArm-Developer" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">xArm SDK ve ROS / ROS2 (GitHub)</a></li>
+                <li><a href="https://www.robotsepeti.com/ufactory" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">Tüm UFACTORY ürünleri (RobotSepeti)</a></li>
+                <li><a href="#katalog" className="hover:text-orange-500 transition-colors">Robot kolları ve teknik özellikler</a></li>
+                <li><a href="#yazilim" className="hover:text-orange-500 transition-colors">Yazılım ekosistemi ve güvenlik</a></li>
+                <li><a href="https://github.com/xArm-Developer" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">xArm SDK ve ROS / ROS 2 (GitHub)</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Yetkili Distribütör Güvencesi</h4>
+              <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">Yetkili distribütör güvencesi</h4>
               <p className="leading-relaxed mb-4 text-slate-500">
-                uFactory ürünleri dünya genelinde 80&apos;den fazla ülkede aktif üretim ve AR-GE sistemlerinde çalışmaktadır. Robotsepeti, bu kalitenin Türkiye&apos;deki tek resmi ve yetkili distribütörüdür. Tüm ürünler yerel garanti ve mühendislik desteği altındadır.
+                UFACTORY ürünleri dünya genelinde 80’den fazla ülkede aktif üretim ve Ar-Ge sistemlerinde çalışmaktadır. RobotSepeti, bu kalitenin Türkiye’deki tek resmî ve yetkili distribütörüdür. Tüm ürünler yerel garanti ve mühendislik desteği altındadır.
               </p>
             </div>
           </div>
           
           <div className="mt-16 text-center text-[10px] text-slate-600 font-bold tracking-[0.2em] uppercase">
-            © {new Date().getFullYear()} Robotsepeti Teknoloji A.Ş. & uFactory. Tüm hakları saklıdır. uFactory Türkiye Yetkili Distribütörü.
+            © {new Date().getFullYear()} RobotSepeti Teknoloji A.Ş. ve UFACTORY. Tüm hakları saklıdır. UFACTORY Türkiye yetkili distribütörü.
           </div>
         </div>
       </footer>

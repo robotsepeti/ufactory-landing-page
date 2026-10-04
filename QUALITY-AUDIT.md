@@ -1,5 +1,14 @@
 # Son kontrol — 4 Ekim 2026
 
+## Yazım ve metin denetimi — 4 Ekim 2026
+
+- 14 ürünün açıklamaları, teknik etiketleri, model seçenekleri; menü, sektör, yazılım, SSS ve footer metinleri incelendi. Logo açıklamaları, e-posta taslakları, meta etiketleri ve yapılandırılmış SSS verileri de düzeltildi.
+- RobotSepeti, UFACTORY, Lite6, ROS 1 ve ROS 2 yazımları tutarlı hale getirildi. Başlıklarda cümle düzeni ve Türkçe yazım/noktalama kuralları uygulandı; eksik cümleler tamamlandı.
+- Ondalık sayılar virgülle, binlik gruplar noktayla gösterilir. Birimler sayılardan boşlukla ayrılır; kuvvet/tork birimleri N, mN, N·m ve mN·m biçimindedir. CountUp animasyonu Türkçe ondalık ve binlik biçimini korur.
+- Bütün ürünler 320 px telefon ve 768 px tablet görünümünde yeniden kontrol edildi; güncellenen metinlerde taşma bulunmadı. xArm 7 masaüstünde ve animasyonlu teknik değerleriyle ayrıca doğrulandı.
+- Satış bağlantıları, ürün rotaları ve medya yolları kaynak karşılaştırmasıyla doğrulandı. Yerleşim sınıfları ve SVG çizimleri korundu.
+- Üretim derlemesi başarılı; lint 0 hata, mevcut 6 görsel performans önerisi. Testler Chromium ekran boyutu emülasyonu ile yapıldı.
+
 ## Doğrulanan kapsam
 
 - 13 ürün, 4 kategori ve tüm model/paket seçimleri; 1440 px masaüstü ve 390 px telefon görünümü.

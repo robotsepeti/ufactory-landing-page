@@ -5,21 +5,21 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "uFactory Robot Kolu Türkiye | Robotsepeti Yetkili Distribütör",
-  description: "Türkiye'nin uFactory yetkili distribütörü RobotSepeti ile xArm, 850, Lite 6 robot kollarını ve aksesuarlarını inceleyin. Teknik özellikler, model seçenekleri ve kurumsal teklif.",
+  title: "UFACTORY robot kolları Türkiye | RobotSepeti yetkili distribütör",
+  description: "Türkiye’nin UFACTORY yetkili distribütörü RobotSepeti ile xArm, 850, Lite6 robot kollarını ve aksesuarlarını inceleyin. Teknik özellikler, model seçenekleri ve kurumsal teklif.",
   metadataBase: new URL("https://ufactory.robotsepeti.com"),
   alternates: {
     canonical: "/",
   },
-  keywords: "uFactory robot kolu, uFactory Türkiye, uFactory distribütör, xArm 6 eksenli robot, cobot Türkiye, endüstriyel robot kolu, pick and place robotu",
-  authors: [{ name: "Robotsepeti" }],
-  creator: "Robotsepeti",
-  publisher: "Robotsepeti",
+  keywords: "UFACTORY robot kolu, UFACTORY Türkiye, UFACTORY distribütör, xArm 6 eksenli robot, cobot Türkiye, endüstriyel robot kolu, pick and place robotu",
+  authors: [{ name: "RobotSepeti" }],
+  creator: "RobotSepeti",
+  publisher: "RobotSepeti",
   openGraph: {
-    title: "uFactory Robot Kolu | Robotsepeti",
-    description: "Türkiye yetkili distribütörü Robotsepeti güvencesiyle xArm ve Lite6 endüstriyel robot kollarını keşfedin.",
+    title: "UFACTORY robot kolları | RobotSepeti",
+    description: "Türkiye yetkili distribütörü RobotSepeti güvencesiyle xArm ve Lite6 endüstriyel robot kollarını keşfedin.",
     url: "https://ufactory.robotsepeti.com/",
-    siteName: "Robotsepeti",
+    siteName: "RobotSepeti",
     locale: "tr_TR",
     type: "website",
     images: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         url: "https://ufactory.robotsepeti.com/images/ufactory_logo_bg.png",
         width: 1200,
         height: 630,
-        alt: "uFactory Robot Kolu - Robotsepeti",
+        alt: "UFACTORY robot kolları — RobotSepeti",
       }
     ]
   },
@@ -49,9 +49,9 @@ const jsonLdSchema = {
   "@graph": [
     {
       "@type": "Organization",
-      "name": "Robotsepeti",
+      "name": "RobotSepeti",
       "url": "https://www.robotsepeti.com",
-      "description": "uFactory yetkili distribütörü",
+      "description": "UFACTORY yetkili distribütörü",
       "logo": "https://ufactory.robotsepeti.com/images/robotsepeti_logo_cropped.png"
     },
     {
@@ -62,7 +62,7 @@ const jsonLdSchema = {
           "name": "Hangi robot kolu benim endüstriyel projeme daha uygun?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Seçim yaparken payload kapasitesi ve tekrar konumlandırma hassasiyeti kritiktir. xArm 6 genel endüstriyel kullanım, xArm 7 ise engelden kaçınma ve dar alanlar için idealdir. Detaylı teknik analiz için mühendislik ekibimizle görüşebilirsiniz."
+            "text": "Seçim yaparken taşıma kapasitesi ve tekrar konumlandırma hassasiyeti kritiktir. xArm 6 genel endüstriyel kullanım, xArm 7 ise engelden kaçınma ve dar alanlar için idealdir. Detaylı teknik analiz için mühendislik ekibimizle görüşebilirsiniz."
           }
         },
         {
@@ -70,7 +70,7 @@ const jsonLdSchema = {
           "name": "xArm serisi için hangi programlama dilleri destekleniyor?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "uFactory robot kolları tamamen açık mimariye sahiptir. ROS, ROS2 desteğinin yanı sıra kapsamlı Python SDK ve C++ kütüphaneleri ile programlanabilir. Ayrıca Modbus TCP üzerinden endüstriyel haberleşme mümkündür."
+            "text": "UFACTORY robot kolları tamamen açık mimariye sahiptir. ROS, ROS 2 desteğinin yanı sıra kapsamlı Python SDK ve C++ kütüphaneleri ile programlanabilir. Ayrıca Modbus TCP üzerinden endüstriyel haberleşme mümkündür."
           }
         },
         {
@@ -78,12 +78,12 @@ const jsonLdSchema = {
           "name": "Kurulum ve robot kolu programlama eğitim desteğiniz var mı?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Evet, Robotsepeti olarak uFactory cobot sistemlerinin sahada kurulumu, entegrasyonu ve teknik personeliniz için temel robot kolu programlama eğitimlerini sağlıyoruz."
+            "text": "Evet, RobotSepeti olarak UFACTORY cobot sistemlerinin sahada kurulumu, entegrasyonu ve teknik personeliniz için temel robot kolu programlama eğitimlerini sağlıyoruz."
           }
         },
         {
           "@type": "Question",
-          "name": "uFactory ürünlerinde teslimat süreleri nedir?",
+          "name": "UFACTORY ürünlerinde teslimat süreleri nedir?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Teslim süresi seçilen model, kontrol kutusu, aksesuarlar ve güncel stok durumuna göre değişir. Ürün sayfasındaki stok bilgisini inceleyebilir veya RobotSepeti ekibinden siparişe özel teslim süresi alabilirsiniz."
