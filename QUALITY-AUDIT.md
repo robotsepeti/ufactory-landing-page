@@ -16,11 +16,19 @@
 - Seçili ürün açıldığında görünmez katalog düğmelerinin klavyeyle erişilebilir kalması.
 - Yenileme ve geri/ileri sırasında seçili ürünün kaybolması.
 - Ürün videosunun portre kutusunda kırpılması; görselin üzerinde kalan ürün başlığı. Video artık tamamını gösterir ve önizleme resmi vardır.
-- Lite 6, Gripper/Vacuum Lite ve eğitim seti seçeneklerinde görsel/özellik eşleşmesi.
+- Lite 6, Gripper/Vacuum Lite ve uArm aksesuarlarında görsel/özellik eşleşmesi.
 - Yanlış Lite6 Pro meta açıklaması, sabit teslim süresi ve doğrulanmayan güvenlik/tarih iddiaları.
 - Ekran dışındaki videoların gereksiz oynatılması; azaltılmış hareket ve veri tasarrufunda otomatik oynatma.
 
 Kuvvet/tork sensöründeki çelişkili xArm 6/7 paket bağlantısı çıkarılmış durumda; yeniden eklenmedi.
+
+## uArm ürün adlandırması düzeltmesi — 4 Ekim 2026
+
+- Birleştirilmiş “Robotik Eğitim Kiti” kaydı kaldırıldı. Konveyör bant sistemi ve Slider kızak sistemi, ayrı açıklama/teknik özellik/galeri ve RobotSepeti satış bağlantılarıyla iki ürün olarak sunuluyor. Katalog artık 14 ürün içeriyor; farklı satış adreslerinin sayısı 31 olarak kaldı.
+- Konveyör açıklaması, nesnelerin taşıyıcı bantla robotun çalışma alanına beslenmesini anlatıyor. Slider açıklaması, robot kolunun ray üzerinde yatay hareketini anlatıyor. Robot kollarının paketlere dahil olmadığı ikisinde de belirtiliyor.
+- Kategori “uArm Aksesuarları” olarak adlandırıldı; ürün ailesi anlatımı düzeltildi. Doğrulanmayan Python/Blockly, görüntü işleme ve STEM paket iddiaları kaldırıldı.
+- Kaynaklar yeniden okundu: [Konveyör](https://www.robotsepeti.com/uarm-robotik-egitim-kiti-conveyor-konveyor), [Slider](https://www.robotsepeti.com/uarm-egitim-kiti-slider-conveyor). Mevcut `#urun=conveyor-kit` adresi korunuyor; Slider'ın adresi `#urun=uarm-slider`.
+- İki ürün 1440 px masaüstü, 320 px telefon ve 768 px tablette kontrol edildi. Dokuz galeri seçimi, katalog dönüşü, doğrudan ürün açılışı, konveyör rotasında yenileme, satış ve teklif bağlantıları doğrulandı; teknik metinlerde taşma ve tarayıcı konsol hatası görülmedi. Üretim derlemesi ve lint tekrar başarılı (0 hata, mevcut 6 görsel performans önerisi).
 
 ## Ek mobil denetim — 4 Ekim 2026
 

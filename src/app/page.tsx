@@ -284,7 +284,7 @@ const quoteMailLink = (product: Product, variantIndex: number) => {
 const HERO_VIDEOS = ['/videos/xarm.mp4', '/videos/lite6.mp4', '/videos/850_small.mp4'];
 
 const TIMELINE_DATA = [
-  { year: 'uArm', title: 'Robotik Eğitim ve Masaüstü Uygulamalar', desc: 'Konveyör ve slider kitleriyle nesne taşıma, ayıklama ve hareket programlama çalışmaları yapılabilir. Eğitim kitlerinde uArm robot kolu ayrıca temin edilir.' },
+  { year: 'uArm', title: 'Konveyör ve Kızak Sistemleri', desc: 'Konveyör, nesneleri robotun önüne taşıyan bant sistemidir. Slider ise robot koluna yatay hareket sağlayan kızaktır. İki sistem ayrı ürünlerdir; uArm robot kolu ürünlere dahil değildir.' },
   { year: 'xArm', title: '5, 6 ve 7 Eksenli Robot Kolları', desc: 'xArm 5 Lite, xArm 6 ve xArm 7; sırasıyla 3 kg, 5 kg ve 3,5 kg taşıma kapasitesi sunar. Eklem sayısı ve çalışma alanı, uygulamanın hareket gereksinimlerine göre seçilir.' },
   { year: 'Lite 6', title: 'Kompakt Altı Eksenli Robot Kolu', desc: '600 g taşıma kapasitesi ve 440 mm erişimiyle masaüstü montaj, eğitim ve araştırma görevleri için kullanılabilir. Elektrikli Gripper Lite ve Vacuum Lite aksesuarlarıyla desteklenir.' },
   { year: '850', title: '850 mm Erişim ve 5 kg Taşıma', desc: 'UFACTORY 850, daha uzun erişim gereken montaj ve parça taşıma uygulamaları için altı eksenli bir seçenektir. Kontrolcü, uç işleyici ve bağlantı seçenekleri sipariş kapsamına göre belirlenir.' },
@@ -339,7 +339,7 @@ const TimelineItem = ({ data, index }: { data: typeof TIMELINE_DATA[0], index: n
 // Görseller RobotSepeti ürün sayfalarından alınmıştır (public/images/products/rs-*).
 const RS = 'https://www.robotsepeti.com/';
 const img = (name: string) => `/images/products/rs-${name}`;
-const products: Record<'xarm' | 'lite' | 'accessories' | 'education', Product[]> = {
+const products: Record<'xarm' | 'lite' | 'accessories' | 'uarm', Product[]> = {
   xarm: [
     {
       id: 'xarm7',
@@ -557,23 +557,32 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'education', Product[]>
       ]
     }
   ],
-  education: [
+  uarm: [
     {
       id: 'conveyor-kit',
-      name: 'uArm Robotik Eğitim Kiti',
-      tagline: 'Konveyör ve Kızaklı (Slider) Eğitim Setleri',
-      image: img('conv-4.webp'),
-      gallery: [img('conv-4.webp'), img('slider-5.webp'), img('slider-4.webp'), img('conv-3.jpg'), img('conv-2.jpg'), img('slider-2.jpg'), img('conv-1.jpg'), img('slider-1.jpg')],
+      name: 'uArm Konveyör Bant Sistemi',
+      tagline: 'Conveyor — Nesne Taşıma ve Besleme',
+      image: img('conv-3.jpg'),
+      gallery: [img('conv-3.jpg'), img('conv-4.webp'), img('conv-2.jpg'), img('conv-1.jpg')],
       url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor',
-      description: 'uArm robot kollarıyla birlikte kullanılan konveyör ve kızaklı (slider) eğitim setleri; üniversite laboratuvarları ve mesleki teknik eğitim merkezlerinde küçük ölçekli bir üretim hattı kurarak nesne tespiti, ayıklama (sorting) ve paletleme uygulamalarını Python veya Blockly ile öğretmeyi sağlar. Not: uArm Swift Pro robot kol sete dahil değildir, ayrıca temin edilir.',
-      specs: { 'Platform': 'uArm Uyumlu', 'Sensör Desteği': 'Renk / Boyut Ayrımı', 'Yazılım': 'Python / Blockly' },
-      features: ['Laboratuvar Masası Ölçeği', 'Gerçek Zamanlı Görüntü İşleme Entegrasyonu', 'Endüstri 4.0 Simülasyonu', 'STEM / STEAM Uyumluluğu'],
-      badge: 'AR-GE Eğitim',
+      description: 'uArm robot kolunun yanında çalışan mini konveyör, nesneleri taşıyıcı bant üzerinde robotun çalışma alanına getirir. Eğimli besleme bandı nesneleri ana hatta aktarır; sistem ultrasonik sensör, renk sensörü ve kızılötesi sayıcıyla kontrol edilir. Paket, konveyör ve besleme bandıyla birlikte kontrolör, bağlantı plakası, iki uArm statoru, güç kaynağı ve bağlantı kablolarını içerir. Görsellerdeki uArm Swift Pro robot kolları pakete dahil değildir; ayrıca temin edilir.',
+      specs: { 'Uyumlu Robot': 'uArm Swift Pro', 'Taşınan Yük': '500 g', 'Maksimum Hız': '100 mm/s', 'Giriş Gerilimi': 'DC 12 V', 'Nominal Güç': '5 W', 'Robot Kol': 'Dahil değil' },
+      features: ['Konveyör ve eğimli besleme bandı', 'Ultrasonik sensör, renk sensörü ve kızılötesi sayıcıyla kontrol', 'Kontrolör ve bağlantı kabloları', 'Bağlantı plakası ve iki robot kolu statoru'],
+      badge: 'Taşıyıcı Bant',
       color: 'from-indigo-600 to-blue-800',
-      variants: [
-        { name: 'Konveyör Kiti', desc: 'Conveyor eğitim kiti', galleryIndex: 0, url: RS + 'uarm-robotik-egitim-kiti-conveyor-konveyor' },
-        { name: 'Slider Kiti', desc: 'Robotik kızak eğitim kiti', galleryIndex: 1, url: RS + 'uarm-egitim-kiti-slider-conveyor' }
-      ]
+    },
+    {
+      id: 'uarm-slider',
+      name: 'uArm Slider Kızak Sistemi',
+      tagline: 'Robot Kolu için Yatay Hareket Platformu',
+      image: img('slider-5.webp'),
+      gallery: [img('slider-5.webp'), img('slider-4.webp'), img('slider-3.jpg'), img('slider-2.jpg'), img('slider-1.jpg')],
+      url: RS + 'uarm-egitim-kiti-slider-conveyor',
+      description: 'uArm robot kolunun monte edildiği motorlu kayar platform, robotu ray boyunca yatayda hareket ettirir. Kızak, step motor ve dişli kutusuyla tahrik edilir. Limit anahtarı başlangıç noktasını belirler, ultrasonik sensör yatay konum bilgisini sağlar ve renk sensörü nesne kavrama noktasının belirlenmesinde kullanılır. Paket; kızak, uArm kontrolörü, sensörler, güç kaynağı, bağlantı kabloları ve montaj altlığını içerir. Görsellerdeki uArm robot kolu dahil değildir; ayrıca temin edilir.',
+      specs: { 'Çalışma Aralığı': '635 mm', 'Maksimum Hız': '100 mm/s', 'Taşıma Kapasitesi': '4 kg', 'Giriş Gerilimi': 'DC 12 V', 'Kontrol Kartı': 'Arduino Mega 2560', 'Boyutlar': '756 × 291 × 87 mm', 'Robot Kol': 'Dahil değil' },
+      features: ['Step motor ve dişli kutusuyla tahrik', 'Ultrasonik sensör, renk sensörü ve limit anahtarı', 'uArm kontrolörü ve bağlantı kabloları', 'Tek robot kolu için montaj altlığı'],
+      badge: 'Motorlu Kızak',
+      color: 'from-indigo-600 to-blue-800'
     },
     {
       id: 'laser-head',
@@ -592,7 +601,7 @@ const products: Record<'xarm' | 'lite' | 'accessories' | 'education', Product[]>
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'xarm' | 'lite' | 'accessories' | 'education'>('xarm');
+  const [activeTab, setActiveTab] = useState<'xarm' | 'lite' | 'accessories' | 'uarm'>('xarm');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [showVideo, setShowVideo] = useState(true);
@@ -607,7 +616,7 @@ const App = () => {
   useEffect(() => {
     const syncProduct = () => {
       const id = window.location.hash.match(/^#urun=([a-z0-9-]+)$/)?.[1];
-      const entry = (Object.entries(products) as ['xarm' | 'lite' | 'accessories' | 'education', Product[]][])
+      const entry = (Object.entries(products) as ['xarm' | 'lite' | 'accessories' | 'uarm', Product[]][])
         .map(([tab, items]) => ({ tab, product: items.find(item => item.id === id) }))
         .find(item => item.product);
       setGalleryIndex(0);
@@ -809,7 +818,7 @@ const App = () => {
   };
 
   // Sektör kartlarındaki butonlar ilgili ürünün detayını katalogda açar
-  const openProductById = (tab: 'xarm' | 'lite' | 'accessories' | 'education', id: string) => {
+  const openProductById = (tab: 'xarm' | 'lite' | 'accessories' | 'uarm', id: string) => {
     const product = products[tab].find((p) => p.id === id);
     if (!product) return;
     setActiveTab(tab);
@@ -1014,7 +1023,7 @@ const App = () => {
                       opacity: tabIndicator.width ? 1 : 0,
                     }}
                   />
-                  {(['xarm', 'lite', 'accessories', 'education'] as const).map((tab) => {
+                  {(['xarm', 'lite', 'accessories', 'uarm'] as const).map((tab) => {
                     const isActive = activeTab === tab;
                     return (
                       <button
@@ -1024,7 +1033,7 @@ const App = () => {
                         aria-pressed={isActive}
                         className={`tab-pill ${isActive ? 'is-active text-white' : 'text-slate-600 hover:text-slate-900'} px-6 sm:px-8 py-3 rounded-full font-bold text-sm`}
                       >
-                        {tab === 'xarm' ? 'Endüstriyel xArm & 850' : tab === 'lite' ? 'Masaüstü Lite Serisi' : tab === 'accessories' ? 'Uç İşleyiciler & Çevre' : 'Eğitim & AR-GE Kitleri'}
+                        {tab === 'xarm' ? 'Endüstriyel xArm & 850' : tab === 'lite' ? 'Masaüstü Lite Serisi' : tab === 'accessories' ? 'Uç İşleyiciler & Çevre' : 'uArm Aksesuarları'}
                       </button>
                     );
                   })}
@@ -1507,7 +1516,7 @@ const App = () => {
       <section className="py-24 bg-slate-50 relative overflow-hidden border-t border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
-             <Reveal as="h4" variant="up" className="text-orange-700 font-bold tracking-widest uppercase text-sm mb-4">Robot Kolları ve Eğitim Sistemleri</Reveal>
+             <Reveal as="h4" variant="up" className="text-orange-700 font-bold tracking-widest uppercase text-sm mb-4">Robot Kolları ve Hareket Sistemleri</Reveal>
              <Reveal as="h2" variant="up" delay={1} className="text-4xl md:text-5xl font-black text-slate-900 mb-6">uFactory Ürün Aileleri</Reveal>
              <Reveal as="p" variant="up" delay={2} className="text-lg text-slate-600 max-w-2xl mx-auto">
                 RobotSepeti&apos;nde sunulan serilerin taşıma kapasitesi, erişimi ve kullanım alanları.
