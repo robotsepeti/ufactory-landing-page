@@ -1624,7 +1624,7 @@ const App = () => {
                     Distribütörle iletişime geç
                   </a>
                 </Magnetic>
-                <a href="tel:+902126976214" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 14 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
+                <a href="tel:+902126976212" className="text-slate-500 font-bold flex items-center gap-2 hover:text-orange-600">+90 212 697 62 12 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span></a>
                 <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="mt-2 text-[#128C7E] font-bold flex items-center gap-2 hover:text-[#075E54]"><WhatsAppIcon size={20} /> WhatsApp: {WHATSAPP_DISPLAY}</a>
              </div>
           </div>
@@ -1655,7 +1655,7 @@ const App = () => {
             <div>
               <h4 className="text-slate-900 font-bold mb-6 uppercase tracking-wider">İletişim</h4>
               <ul className="space-y-4">
-                <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976214" className="hover:text-orange-500">+90 212 697 62 14</a></li>
+                <li className="font-bold text-slate-900">Telefon: <a href="tel:+902126976212" className="hover:text-orange-500">+90 212 697 62 12</a></li>
                 <li><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[#128C7E] font-semibold hover:text-[#075E54]"><WhatsAppIcon size={18} /> WhatsApp: {WHATSAPP_DISPLAY}</a></li>
                 <li>Kurumsal teklif: <a href={gmailLink('UFACTORY kurumsal teklif talebi', 'Merhaba,\n\nUFACTORY ürünleri için teklif almak istiyorum.\n\nFirma adı:\nAd soyad:\nTelefon:\nİlgilendiğim ürün:\n\nTeşekkürler.')} target="_blank" rel="noopener noreferrer" className="hover:text-orange-500">kurumsal@robotsepeti.com</a></li>
                 <li>Teknik destek: <a href="mailto:destek@robotsepeti.com" className="hover:text-orange-500">destek@robotsepeti.com</a></li>
