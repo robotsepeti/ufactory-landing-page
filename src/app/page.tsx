@@ -1685,6 +1685,18 @@ const App = () => {
           </div>
         </div>
       </footer>
+      {/* Sabit WhatsApp butonu — reklamdan gelen ziyaretçi sayfanın her yerinden ulaşabilsin */}
+      <a
+        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Merhaba, UFACTORY robot kolları hakkında bilgi ve fiyat teklifi almak istiyorum.')}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`WhatsApp ile yazın: ${WHATSAPP_DISPLAY}`}
+        title="WhatsApp ile yazın"
+        className="fixed bottom-16 right-4 md:bottom-20 md:right-6 z-[80] flex items-center gap-2 rounded-full bg-[#25D366] px-3.5 py-3.5 md:px-5 md:py-3 text-white font-bold shadow-lg shadow-black/20 transition-transform hover:-translate-y-1 hover:bg-[#1EBE5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#128C7E]"
+      >
+        <WhatsAppIcon size={26} />
+        <span className="hidden md:inline text-sm">WhatsApp&apos;tan yazın</span>
+      </a>
       <button
         type="button"
         aria-label="Sayfanın başına dön"
