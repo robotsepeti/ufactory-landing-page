@@ -703,6 +703,8 @@ const App = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   // Subtle hero parallax (the hero video drifts slowly as we scroll past)
   const [heroParallax, setHeroParallax] = useState(0);
+  // Sabit WhatsApp butonu hero geçildikten sonra görünür (hero'da kendi WhatsApp butonu var)
+  const [pastHero, setPastHero] = useState(false);
 
   // Active section (for navbar indicator)
   const [activeSection, setActiveSection] = useState<string>('');
@@ -739,6 +741,7 @@ const App = () => {
       const p = max > 0 ? (window.scrollY / max) * 100 : 0;
       setScrollProgress(p);
       setHeroParallax(Math.min(window.scrollY * 0.35, 400));
+      setPastHero(window.scrollY > window.innerHeight * 0.6);
       raf = 0;
     };
     const onScroll = () => {
@@ -961,7 +964,15 @@ const App = () => {
 
           {/* Bottom Row: CTA (Bottom Right) */}
           <div className="flex justify-end items-end w-full">
-            <div className="pointer-events-auto">
+            <div className="pointer-events-auto flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3">
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Merhaba, UFACTORY robot kolları hakkında bilgi ve fiyat teklifi almak istiyorum.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#25D366] text-white px-6 py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-[#1EBE5A] transition-colors duration-300 flex items-center justify-center gap-2 shadow-2xl shadow-black/30"
+              >
+                <WhatsAppIcon size={22} /> WhatsApp&apos;tan teklif al
+              </a>
               <Magnetic strength={0.3}>
                 <a href="#katalog" className="btn-glow bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-sm md:text-base hover:bg-orange-600 transition-all duration-300 flex items-center gap-2 shadow-2xl shadow-slate-900/30 hover:shadow-orange-500/40 hover:-translate-y-0.5 group">
                   Kataloğu keşfet <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -1692,7 +1703,9 @@ const App = () => {
         rel="noopener noreferrer"
         aria-label={`WhatsApp ile yazın: ${WHATSAPP_DISPLAY}`}
         title="WhatsApp ile yazın"
-        className="fixed bottom-16 right-4 md:bottom-20 md:right-6 z-[80] flex items-center gap-2 rounded-full bg-[#25D366] px-3.5 py-3.5 md:px-5 md:py-3 text-white font-bold shadow-lg shadow-black/20 transition-transform hover:-translate-y-1 hover:bg-[#1EBE5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#128C7E]"
+        aria-hidden={!pastHero}
+        tabIndex={pastHero ? 0 : -1}
+        className={`fixed bottom-16 right-4 md:bottom-20 md:right-6 z-[80] flex items-center gap-2 rounded-full bg-[#25D366] px-3.5 py-3.5 md:px-5 md:py-3 text-white font-bold shadow-lg shadow-black/20 transition-[opacity,transform] duration-300 hover:-translate-y-1 hover:bg-[#1EBE5A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#128C7E] ${pastHero ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-4'}`}
       >
         <WhatsAppIcon size={26} />
         <span className="hidden md:inline text-sm">WhatsApp&apos;tan yazın</span>
@@ -1702,7 +1715,9 @@ const App = () => {
         aria-label="Sayfanın başına dön"
         title="Yukarı dön"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[80] grid h-10 w-10 place-items-center rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-600/25 transition-transform hover:-translate-y-1 hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        aria-hidden={!pastHero}
+        tabIndex={pastHero ? 0 : -1}
+        className={`fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[80] grid h-10 w-10 place-items-center rounded-xl bg-orange-600 text-white shadow-lg shadow-orange-600/25 transition-[opacity,transform] duration-300 hover:-translate-y-1 hover:bg-orange-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 ${pastHero ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-4'}`}
       >
         <span aria-hidden="true" className="text-2xl leading-none">↑</span>
       </button>
