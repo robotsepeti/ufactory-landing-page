@@ -16,7 +16,7 @@ import { useEffect } from "react";
  */
 const GOOGLE_ADS_ID = "AW-1002448827";
 const GA4_ID = "G-1JMD48GTSQ";
-const ADS_WHATSAPP_LABEL = ""; // ör. "AbC-D_efG-h12_34-567"
+const ADS_WHATSAPP_LABEL = "LG2aCK3Y358dELvPgN4D"; // Google Ads: "WhatsApp tıklaması – ufactory" (Kişi, birincil, 17 Eki 2026)
 const ADS_PHONE_LABEL = "";
 
 type Gtag = (...args: unknown[]) => void;
@@ -32,7 +32,7 @@ function track(kind: "whatsapp" | "phone", href: string) {
 
   const label = kind === "whatsapp" ? ADS_WHATSAPP_LABEL : ADS_PHONE_LABEL;
   if (label) {
-    gtag("event", "conversion", { send_to: `${GOOGLE_ADS_ID}/${label}` });
+    gtag("event", "conversion", { send_to: `${GOOGLE_ADS_ID}/${label}`, value: 1.0, currency: "TRY" });
   }
 }
 
